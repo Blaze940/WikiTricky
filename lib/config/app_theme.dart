@@ -5,7 +5,7 @@ ThemeData buildAppTheme() {
     primarySwatch: Colors.red,
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(25.0),
+        borderRadius: BorderRadius.circular(15.0),
         borderSide: BorderSide.none,
       ),
       filled: true,

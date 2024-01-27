@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:huit_heures/src/views/auth/signup_screen.dart';
 
 class LoginScreen extends StatelessWidget {
+  static const String routeName = '/login';
   const LoginScreen({super.key});
 
   @override
@@ -16,7 +19,7 @@ class LoginScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 60),
+                const SizedBox(height: 40),
                 const SizedBox(
                   height: 200,
                   child: Image(
@@ -60,9 +63,7 @@ class LoginScreen extends StatelessWidget {
                           decoration: TextDecoration.underline,
                         ),
                       ),
-                      onPressed: () {
-                        //TODO: Implement sign-up navigation
-                      },
+                      onPressed: _navigateToSignUp(context),
                       child: const Text('Sign Up'),
                     ),
                   ],
@@ -75,7 +76,11 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-
+  _navigateToSignUp(context) {
+    return () {
+      GoRouter.of(context).go(SignupScreen.routeName);
+    };
+  }
   Widget _buildSignInForm() {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -134,7 +139,7 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              //TODO: Implement password forgotten
+              //TODO: Implement password forgotten if time
             },
           ),
         ],
