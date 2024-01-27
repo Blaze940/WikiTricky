@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 ThemeData buildAppTheme() {
   return ThemeData(
-    primarySwatch: Colors.deepPurple,
+    primarySwatch: Colors.red,
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(25.0),
@@ -12,14 +12,14 @@ ThemeData buildAppTheme() {
       fillColor: Colors.white,
     ),
     buttonTheme: ButtonThemeData(
-      buttonColor: Colors.deepPurple,
+      buttonColor: const Color(0xFF8B0000),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18.0),
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: const Color(0xFF8B0000),
         foregroundColor: Colors.white,
       ),
     ),

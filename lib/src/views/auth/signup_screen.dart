@@ -6,9 +6,10 @@ class SignupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.deepPurpleAccent,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          padding: EdgeInsets.symmetric(horizontal: 25),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -20,7 +21,7 @@ class SignupScreen extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 48),
+              const SizedBox(height: 48),
               TextFormField(
                 decoration: const InputDecoration(
                   hintText: 'Name',
@@ -46,10 +47,6 @@ class SignupScreen extends StatelessWidget {
                 onPressed: () {
                   // Implement sign up functionality
                 },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blue, // Button color
-                  onPrimary: Colors.white, // Text color
-                ),
                 child: Text('Create'),
               ),
             ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:huit_heures/src/views/auth/login_screen.dart';
+import 'package:huit_heures/src/views/auth/signup_screen.dart';
 import 'config/app_theme.dart';
 
 void main() {
@@ -14,9 +15,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: '8Heures',
+      title: 'WikiTricky',
       theme: buildAppTheme(),
       home: LoginScreen(),
+      //home: SignupScreen(),
     );
   }
 }
