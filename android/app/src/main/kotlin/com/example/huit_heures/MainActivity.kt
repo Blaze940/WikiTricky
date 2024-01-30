@@ -1,4 +1,4 @@
-package com.example.huit_heures
+package com.example.wiki_tricky
 
 import io.flutter.embedding.android.FlutterActivity
 

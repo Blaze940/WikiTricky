@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:huit_heures/src/views/auth/signup_screen.dart';
+import 'package:wiki_tricky/src/helpers/validators.dart';
+import 'package:wiki_tricky/src/views/auth/signup_screen.dart';
+
 
 class LoginScreen extends StatelessWidget {
   static const String routeName = '/login';
-  const LoginScreen({super.key});
+  final _formKey = GlobalKey<FormState>();
+
+  LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Sign in to continue',
+                  'Login to continue',
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
                     color: Colors.white70,
@@ -45,8 +49,8 @@ class LoginScreen extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 40),
-                _buildSignInForm(),
+                const SizedBox(height: 20),
+                _buildLoginForm(),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -76,74 +80,83 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildLoginForm() {
+    void validateForm() {
+      if (_formKey.currentState!.validate()) {}
+    }
+
+    return Form(
+      key: _formKey,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 10,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              decoration: InputDecoration(
+                hintText: 'Email',
+                prefixIcon: const Icon(Icons.email, color: Colors.black),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              validator: validateEmail,
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText: 'Password',
+                prefixIcon: const Icon(Icons.lock, color: Colors.black),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              validator: validatePassword,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: validateForm,
+              child: const Text(
+                'Go',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            TextButton(
+              child: const Text(
+                'Forgot your password?',
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+              onPressed: () {
+                //TODO: Implement password forgotten if time
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   _navigateToSignUp(context) {
     return () {
       GoRouter.of(context).go(SignupScreen.routeName);
     };
-  }
-  Widget _buildSignInForm() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 10,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextFormField(
-            decoration: InputDecoration(
-              hintText: 'Username',
-              prefixIcon: const Icon(Icons.person, color: Colors.black),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          TextFormField(
-            obscureText: true,
-            decoration: InputDecoration(
-              hintText: 'Password',
-              prefixIcon: const Icon(Icons.lock, color: Colors.black),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () {
-              //TODO: Implement sign in functionality
-            },
-            child: const Text(
-              'Sign In',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-              ),
-            ),
-          ),
-          TextButton(
-            child: const Text(
-              'Forgot your password?',
-              style: TextStyle(
-                color: Colors.grey,
-              ),
-            ),
-            onPressed: () {
-              //TODO: Implement password forgotten if time
-            },
-          ),
-        ],
-      ),
-    );
   }
 }

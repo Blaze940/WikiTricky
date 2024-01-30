@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:huit_heures/src/views/auth/login_screen.dart';
-import 'package:huit_heures/src/views/auth/signup_screen.dart';
+import 'package:wiki_tricky/src/views/auth/login_screen.dart';
+import 'package:wiki_tricky/src/views/auth/signup_screen.dart';
 import 'config/app_theme.dart';
 import 'package:go_router/go_router.dart';
 

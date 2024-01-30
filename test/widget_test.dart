@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:huit_heures/main.dart';
+import 'package:wiki_tricky/main.dart';
 
 void main() {
 
