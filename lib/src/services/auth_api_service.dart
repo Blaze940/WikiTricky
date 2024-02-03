@@ -14,8 +14,10 @@ class AuthApiService {
           'password': password,
         },
       );
+      print("response signup: " + response.toString());
       return response.data;
     } on DioException catch (e) {
+      print("error signup: " + e.toString());
       throw Exception('Failed to sign up: ${e.message}');
     }
   }
@@ -29,8 +31,11 @@ class AuthApiService {
           'password': password,
         },
       );
+      print("response login: " + response.toString());
+      //print("Test login token: " + response.data['authToken']);
       return response.data;
     } on DioException catch (e) {
+      print("error login: " + e.toString());
       throw Exception('Failed to login: ${e.message}');
     }
   }

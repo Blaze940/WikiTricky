@@ -1,15 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wiki_tricky/src/helpers/validators.dart';
 import 'package:wiki_tricky/src/views/auth/signup_screen.dart';
 
+import '../../blocs/auth_bloc/auth_bloc.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
-  final _formKey = GlobalKey<FormState>();
 
   LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +67,7 @@ class LoginScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
-                _buildLoginForm(),
+                _buildLoginForm(context),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -67,7 +84,7 @@ class LoginScreen extends StatelessWidget {
                           decoration: TextDecoration.underline,
                         ),
                       ),
-                      onPressed: _navigateToSignUp(context),
+                      onPressed: () => _navigateToSignUp(context),
                       child: const Text('Sign Up'),
                     ),
                   ],
@@ -81,11 +98,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLoginForm() {
-    void validateForm() {
-      if (_formKey.currentState!.validate()) {}
-    }
-
+  Widget _buildLoginForm(BuildContext context) {
     return Form(
       key: _formKey,
       child: Container(
@@ -105,6 +118,7 @@ class LoginScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
+              controller: _emailController,
               decoration: InputDecoration(
                 hintText: 'Email',
                 prefixIcon: const Icon(Icons.email, color: Colors.black),
@@ -116,6 +130,7 @@ class LoginScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             TextFormField(
+              controller: _passwordController,
               obscureText: true,
               decoration: InputDecoration(
                 hintText: 'Password',
@@ -128,7 +143,7 @@ class LoginScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: validateForm,
+              onPressed: () => _validateForm(context),
               child: const Text(
                 'Go',
                 style: TextStyle(
@@ -145,7 +160,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                //TODO: Implement password forgotten if time
+                // TODO: Implementer la récupération du mot de passe si nécessaire
               },
             ),
           ],
@@ -154,9 +169,18 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  _navigateToSignUp(context) {
-    return () {
-      GoRouter.of(context).go(SignupScreen.routeName);
-    };
+  void _validateForm(BuildContext context) {
+    if (_formKey.currentState!.validate()) {
+      final email = _emailController.text;
+      final password = _passwordController.text;
+
+      BlocProvider.of<AuthBloc>(context).add(
+        LoginRequested(email, password),
+      );
+    }
+  }
+
+  void _navigateToSignUp(context) {
+    GoRouter.of(context).go(SignupScreen.routeName);
   }
 }

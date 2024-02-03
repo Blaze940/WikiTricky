@@ -1,14 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wiki_tricky/src/helpers/validators.dart';
 
+// Ajustez le chemin selon votre structure de projet
+import '../../blocs/auth_bloc/auth_bloc.dart';
 import 'login_screen.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   static const String routeName = '/signup';
-  final _formKey = GlobalKey<FormState>();
 
-  SignupScreen({Key? key}) : super(key: key);
+  const SignupScreen({Key? key}) : super(key: key);
+
+  @override
+  _SignupScreenState createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +68,7 @@ class SignupScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
-                _buildSignUpForm(),
+                _buildSignUpForm(context),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -78,11 +98,7 @@ class SignupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSignUpForm() {
-    void validateForm() {
-      if (_formKey.currentState!.validate()) {}
-    }
-
+  Widget _buildSignUpForm(BuildContext context) {
     return Form(
       key: _formKey,
       child: Container(
@@ -102,6 +118,7 @@ class SignupScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
+              controller: _emailController,
               decoration: InputDecoration(
                 hintText: 'Email',
                 prefixIcon: const Icon(Icons.email, color: Colors.black),
@@ -113,6 +130,7 @@ class SignupScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             TextFormField(
+              controller: _usernameController,
               decoration: InputDecoration(
                 hintText: 'Username',
                 prefixIcon: const Icon(Icons.person, color: Colors.black),
@@ -124,6 +142,7 @@ class SignupScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             TextFormField(
+              controller: _passwordController,
               obscureText: true,
               decoration: InputDecoration(
                 hintText: 'Password',
@@ -136,7 +155,7 @@ class SignupScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: validateForm,
+              onPressed: () => _validateForm(context),
               child: const Text(
                 'Sign Up',
                 style: TextStyle(
@@ -149,6 +168,18 @@ class SignupScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _validateForm(BuildContext context) {
+    if (_formKey.currentState!.validate()) {
+      final email = _emailController.text;
+      final username = _usernameController.text;
+      final password = _passwordController.text;
+
+      BlocProvider.of<AuthBloc>(context).add(
+        SignupRequested(email, username, password),
+      );
+    }
   }
 
   _navigateToLogin(BuildContext context) {

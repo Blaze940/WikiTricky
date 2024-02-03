@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wiki_tricky/src/blocs/auth_bloc/auth_bloc.dart';
+import 'package:wiki_tricky/src/services/auth_api_service.dart';
 import 'package:wiki_tricky/src/views/auth/login_screen.dart';
 import 'package:wiki_tricky/src/views/auth/signup_screen.dart';
 import 'config/app_theme.dart';
@@ -8,7 +11,7 @@ void main() {
   final goRouter = GoRouter(
     routes: [
       GoRoute(
-          path: '/',
+        path: '/',
         builder: (context, state) => LoginScreen(),
       ),
       GoRoute(
@@ -17,7 +20,7 @@ void main() {
       ),
       GoRoute(
         path: SignupScreen.routeName,
-        builder: (context, state) =>  SignupScreen(),
+        builder: (context, state) => const SignupScreen(),
       ),
     ],
   );
@@ -32,11 +35,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: goRouter,
-      debugShowCheckedModeBanner: false,
-      title: 'WikiTricky',
-      theme: buildAppTheme(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc(AuthApiService()),
+        ),
+      ],
+      child: MaterialApp.router(
+        routerConfig: goRouter,
+        debugShowCheckedModeBanner: false,
+        title: 'WikiTricky',
+        theme: buildAppTheme(),
+      ),
     );
   }
 }
+
