@@ -6,7 +6,7 @@ class AuthApiService {
 
   Future<dynamic> signup(String email, String name, String password) async {
     try {
-      var response = await _dio.post(
+      final token = await _dio.post(
         "$baseAuthUrl/signup",
         data: {
           'email': email,
@@ -14,8 +14,8 @@ class AuthApiService {
           'password': password,
         },
       );
-      print("response signup: " + response.toString());
-      return response.data;
+      print("token signup: " + token.toString());
+      return token.data;
     } on DioException catch (e) {
       print("error signup: " + e.toString());
       throw Exception('Failed to sign up: ${e.message}');
@@ -24,16 +24,16 @@ class AuthApiService {
 
   Future<dynamic> login(String email, String password) async {
     try {
-      var response = await _dio.post(
+      final token = await _dio.post(
         "$baseAuthUrl/login",
         data: {
           'email': email,
           'password': password,
         },
       );
-      print("response login: " + response.toString());
-      //print("Test login token: " + response.data['authToken']);
-      return response.data;
+      print("token login: " + token.toString());
+      //print("Test login token: " + token.data['authToken']);
+      return token.data;
     } on DioException catch (e) {
       print("error login: " + e.toString());
       throw Exception('Failed to login: ${e.message}');

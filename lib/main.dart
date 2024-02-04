@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wiki_tricky/src/blocs/auth_bloc/auth_bloc.dart';
 import 'package:wiki_tricky/src/services/auth_api_service.dart';
+import 'package:wiki_tricky/src/services/secure_storage_service.dart';
 import 'package:wiki_tricky/src/views/auth/login_screen.dart';
 import 'package:wiki_tricky/src/views/auth/signup_screen.dart';
 import 'config/app_theme.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
-          create: (context) => AuthBloc(AuthApiService()),
+          create: (context) => AuthBloc(AuthApiService(),SecureStorageService()),
         ),
       ],
       child: MaterialApp.router(

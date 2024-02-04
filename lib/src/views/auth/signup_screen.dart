@@ -154,15 +154,21 @@ class _SignupScreenState extends State<SignupScreen> {
               validator: validatePassword,
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => _validateForm(context),
-              child: const Text(
-                'Sign Up',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                ),
-              ),
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                return state.status == AuthStatus.loading
+                    ? const CircularProgressIndicator()
+                    : ElevatedButton(
+                  onPressed: () => _validateForm(context),
+                  child: const Text(
+                    'Sign Up',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),

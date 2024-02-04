@@ -142,15 +142,21 @@ class _LoginScreenState extends State<LoginScreen> {
               validator: validatePassword,
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => _validateForm(context),
-              child: const Text(
-                'Go',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                ),
-              ),
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                return state.status == AuthStatus.loading
+                    ? const CircularProgressIndicator()
+                    : ElevatedButton(
+                  onPressed: () => _validateForm(context),
+                  child: const Text(
+                    'Go',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                );
+              },
             ),
             TextButton(
               child: const Text(
