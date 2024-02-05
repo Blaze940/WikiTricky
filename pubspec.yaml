@@ -41,6 +41,7 @@ dependencies:
   meta: ^1.10.0
   dio: ^5.4.0
   flutter_secure_storage: ^9.0.0
+  toastification: ^1.2.0
 
 dev_dependencies:
   flutter_test:

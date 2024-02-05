@@ -1,12 +1,15 @@
 import 'package:dio/dio.dart';
 
+import '../exceptions/auth_api_exception.dart';
+
+
 class AuthApiService {
   final Dio _dio = Dio();
   final String baseAuthUrl = "https://xoc1-kd2t-7p9b.n7c.xano.io/api:xbcc5VEi/auth";
 
-  Future<dynamic> signup(String email, String name, String password) async {
+  Future<String> signup(String email, String name, String password) async {
     try {
-      final token = await _dio.post(
+      final response = await _dio.post(
         "$baseAuthUrl/signup",
         data: {
           'email': email,
@@ -14,33 +17,41 @@ class AuthApiService {
           'password': password,
         },
       );
-      print("token signup: " + token.toString());
-      return token.data;
+      //Jusqu'ici tout va bien
+      //print('responseData =' + response.data);
+      //final authResponse = AuthResponse.fromJson(response.data);
+      //print('authResponse =' + authResponse.toString());
+      return response.data['authToken'] ;
+      //return authResponse;
     } on DioException catch (e) {
-      print("error signup: " + e.toString());
-      throw Exception('Failed to sign up: ${e.message}');
+      throw AuthApiException(
+        code: e.response?.statusCode ?? 500,
+        message: e.response?.statusMessage ?? 'Unknown error',
+        payload: e.response?.data['payload'] ?? '',
+      );
     }
   }
 
-  Future<dynamic> login(String email, String password) async {
+  Future<String> login(String email, String password) async {
     try {
-      final token = await _dio.post(
+      final response = await _dio.post(
         "$baseAuthUrl/login",
         data: {
           'email': email,
           'password': password,
         },
       );
-      print("token login: " + token.toString());
-      //print("Test login token: " + token.data['authToken']);
-      return token.data;
+      return response.data['authToken'] ;
     } on DioException catch (e) {
-      print("error login: " + e.toString());
-      throw Exception('Failed to login: ${e.message}');
+      throw AuthApiException(
+        code: e.response?.statusCode ?? 500,
+        message: e.response?.statusMessage ?? 'Unknown error',
+        payload: e.response?.data['payload'] ?? '',
+      );
     }
   }
 
   Future<dynamic> getCurrentUserInfo(String bearerAuth) async {
-    //TODO: Complete logic in it
+    //TODO: Complete logic
   }
 }

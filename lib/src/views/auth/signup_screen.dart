@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wiki_tricky/src/helpers/validators.dart';
+import 'package:toastification/toastification.dart';
 
 // Ajustez le chemin selon votre structure de projet
 import '../../blocs/auth_bloc/auth_bloc.dart';
@@ -32,65 +33,95 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF8B0000),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 40),
-                const SizedBox(
-                  height: 200,
-                  child: Image(
-                    image: AssetImage('assets/logo_wiki_twiki_white.png'),
-                  ),
-                ),
-                const Text(
-                  'Create Account',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 30,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Fill the form below',
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white70,
-                    fontSize: 18,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
-                _buildSignUpForm(context),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Already have an account?',
-                      style: TextStyle(color: Colors.grey),
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state.status == AuthStatus.success) {
+          toastification.show(
+            context: context,
+            type: ToastificationType.success,
+            style: ToastificationStyle.fillColored,
+            title: const Text('Account created '),
+            description: const Text('Welcome to WikiTwiki - You can now login'),
+            autoCloseDuration: const Duration(seconds: 3),
+            alignment: Alignment.bottomCenter,
+            //icon: const Icon(Icons.check)
+          );
+          Future.delayed(const Duration(seconds: 4), _navigateToLogin(context));
+        }
+        if (state.status == AuthStatus.error) {
+          // Affiche un toast en cas d'erreur
+          toastification.show(
+            context: context,
+            type: ToastificationType.error,
+            style: ToastificationStyle.fillColored,
+            title: const Text('Failed to sign up'),
+            description: const Text('Account already exists. Use unique email and username'),
+            autoCloseDuration: const Duration(seconds: 6),
+            alignment: Alignment.bottomCenter,
+            //icon: const Icon(Icons.error)
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFF8B0000),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 40),
+                  const SizedBox(
+                    height: 200,
+                    child: Image(
+                      image: AssetImage('assets/logo_wiki_twiki_white.png'),
                     ),
-                    TextButton(
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          textStyle: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
+                  ),
+                  const Text(
+                    'Create Account',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 30,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Fill the form below',
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white70,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  _buildSignUpForm(context),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Already have an account?',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      TextButton(
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            textStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
-                        ),
-                        onPressed: _navigateToLogin(context),
-                        child: const Text('Login')),
-                  ],
-                ),
-                const SizedBox(height: 40),
-              ],
+                          onPressed: _navigateToLogin(context),
+                          child: const Text('Login')),
+                    ],
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              ),
             ),
           ),
         ),
@@ -159,15 +190,15 @@ class _SignupScreenState extends State<SignupScreen> {
                 return state.status == AuthStatus.loading
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
-                  onPressed: () => _validateForm(context),
-                  child: const Text(
-                    'Sign Up',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
-                  ),
-                );
+                        onPressed: () => _validateForm(context),
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                      );
               },
             ),
           ],

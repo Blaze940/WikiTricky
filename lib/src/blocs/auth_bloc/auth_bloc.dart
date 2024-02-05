@@ -21,17 +21,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       LoginRequested event, Emitter<AuthState> emit) async {
     emit(state.copyWith(status: AuthStatus.loading));
     try {
-      final token = await apiService.login(event.email, event.password);
-      await secureStorageService.saveAuthToken(token);
+      final authToken =
+          await apiService.login(event.email, event.password);
+      await secureStorageService.saveAuthToken(authToken);
       emit(state.copyWith(status: AuthStatus.success));
-      //print("token login bloc: " + token.toString());
-      return token.toString();
+      //print("authToken login bloc: " + authToken.toString());
+      //return authToken;
     } catch (e) {
       emit(state.copyWith(
-          status: AuthStatus.error, error: Exception('Failed to login')));
-      print("error login bloc : " + e.toString());
+          status: AuthStatus.error,
+          error: Exception('Failed to login - ' + e.toString())));
+      //print("error login bloc : " + e.toString());
     }
-
     return null;
   }
 
@@ -39,23 +40,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       SignupRequested event, Emitter<AuthState> emit) async {
     emit(state.copyWith(status: AuthStatus.loading));
     try {
-      final token =
+      final authToken =
           await apiService.signup(event.email, event.username, event.password);
-      await secureStorageService.saveAuthToken(token);
+      //print('authResponse =' + authToken.toString());
+      await secureStorageService.saveAuthToken(authToken);
       emit(state.copyWith(status: AuthStatus.success));
-      //print("token signup bloc: " + token.toString());
-      return token.toString();
+      //print
     } catch (e) {
       emit(state.copyWith(
-          status: AuthStatus.error, error: Exception('Failed to signup')));
-      //print("error signup bloc : " + e.toString());
+          status: AuthStatus.error,
+          error: Exception('Failed to signup - ' + e.toString())));
     }
     return null;
   }
 
   Future<void> _onLogoutRequested(
       LogoutRequested event, Emitter<AuthState> emit) async {
-    await secureStorageService.deleteAuthToken();
-    emit(state.copyWith(status: AuthStatus.initial));
+    try {
+      await secureStorageService.deleteAuthToken();
+      emit(state.copyWith(status: AuthStatus.initial));
+    } catch (e) {
+      emit(state.copyWith(
+          status: AuthStatus.error,
+          error: Exception('Failed to logout - ' + e.toString())));
+    }
   }
 }

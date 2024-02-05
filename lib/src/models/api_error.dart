@@ -1,5 +1,5 @@
-class ApiError {
-  final String code;
+class ApiError implements Exception{
+  final int code;
   final String message;
   final String payload;
 

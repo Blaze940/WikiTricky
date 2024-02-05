@@ -8,10 +8,20 @@ class SecureStorageService {
   }
 
   Future<String?> getAuthToken() async {
-    return await _storage.read(key: 'authToken');
+    try {
+      return await _storage.read(key: 'authToken');
+    } catch (e) {
+      //print("error getAuthToken: " + e.toString());
+      throw Exception('Failed to get auth token - ' + e.toString());
+    }
   }
 
   Future<void> deleteAuthToken() async {
-    await _storage.delete(key: 'authToken');
+    try{
+      await _storage.delete(key: 'authToken');
+    } catch (e) {
+      //print("error deleteAuthToken: " + e.toString());
+      throw Exception('Failed to delete auth token - ' + e.toString());
+    }
   }
 }
