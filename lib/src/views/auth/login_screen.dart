@@ -7,6 +7,7 @@ import 'package:wiki_tricky/src/helpers/validators.dart';
 import 'package:wiki_tricky/src/views/auth/signup_screen.dart';
 
 import '../../blocs/auth_bloc/auth_bloc.dart';
+import '../../services/toast_service.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
@@ -34,35 +35,9 @@ class _LoginScreenState extends State<LoginScreen> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state.status == AuthStatus.success) {
-          toastification.show(
-            context: context,
-            type: ToastificationType.success,
-            style: ToastificationStyle.fillColored,
-            title: const Text('Success'),
-            description: const Text('Ready to continue'),
-            autoCloseDuration: const Duration(seconds: 3),
-            alignment: Alignment.topRight,
-            //icon: const Icon(Icons.check)
-          );
-          Future.delayed(
-            const Duration(seconds: 4),
-            //TODO: navigate to homePage
-          );
-        }
-        if (state.status == AuthStatus.error) {
-          toastification.show(
-            context: context,
-            type: ToastificationType.error,
-            style: ToastificationStyle.fillColored,
-            title: const Text('Failed to log in'),
-            description: Text(state.error.toString()),
-            autoCloseDuration: const Duration(seconds: 6),
-            alignment: Alignment.topRight,
-            //icon: const Icon(Icons.error)
-          );
-        }
-      },
+        handleAuthState(state);
+      }
+      ,
       child: Scaffold(
         backgroundColor: Color(0xFF8B0000),
         body: SafeArea(
@@ -180,15 +155,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 return state.status == AuthStatus.loading
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
-                        onPressed: () => _validateForm(context),
-                        child: const Text(
-                          'Go',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
-                        ),
-                      );
+                  onPressed: () => _validateForm(context),
+                  child: const Text(
+                    'Go',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                );
               },
             ),
             TextButton(
@@ -221,5 +196,29 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _navigateToSignUp(context) {
     GoRouter.of(context).go(SignupScreen.routeName);
+  }
+
+  void handleAuthState(AuthState state) {
+    if (state.status == AuthStatus.success) {
+      showCustomToast(
+        context,
+        type: ToastificationType.success,
+        title: 'Success',
+        description: 'Ready to continue',
+        autoCloseDuration: const Duration(seconds: 3),
+      );
+      Future.delayed(const Duration(seconds: 4),
+        //TODO: navigate to HomePage
+      );
+    }
+    if (state.status == AuthStatus.error) {
+      showCustomToast(
+        context,
+        type: ToastificationType.error,
+        title: 'Failed to sign up',
+        description: state.error.toString(),
+        autoCloseDuration: const Duration(seconds: 6),
+      );
+    }
   }
 }

@@ -31,12 +31,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(
           status: AuthStatus.error,
           error: ApiError(
-              message: e.response?.data['message'] ?? "Something went wrong. Try later ...")));
+              message: e.response?.data['message'] ??
+                  "Something went wrong. Try later ...")));
     } on Exception {
       emit(state.copyWith(
           status: AuthStatus.error,
-          error: ApiError(
-              message: "Something went wrong. Try later ...")));
+          error: ApiError(message: "Something went wrong. Try later ...")));
     }
     return null;
   }
@@ -51,12 +51,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(
           status: AuthStatus.error,
           error: ApiError(
-              message: e.response?.data['message'] ?? "Something went wrong. Try later ...")));
-    } catch (e) {
+              message: e.response?.data['message'] ??
+                  "Something went wrong. Try later ...")));
+    } on Exception {
       emit(state.copyWith(
           status: AuthStatus.error,
-          error: ApiError(
-              message: "Something went wrong. Try later ...")));
+          error: ApiError(message: "Something went wrong. Try later ...")));
     }
   }
 

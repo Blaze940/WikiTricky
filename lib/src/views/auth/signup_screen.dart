@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wiki_tricky/src/helpers/validators.dart';
 import 'package:toastification/toastification.dart';
+import 'package:wiki_tricky/src/services/toast_service.dart';
 
 import '../../blocs/auth_bloc/auth_bloc.dart';
 import 'login_screen.dart';
@@ -34,32 +35,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state.status == AuthStatus.success) {
-          toastification.show(
-            context: context,
-            type: ToastificationType.success,
-            style: ToastificationStyle.fillColored,
-            title: const Text('Account created '),
-            description: const Text('Welcome to WikiTwiki - You can now login'),
-            autoCloseDuration: const Duration(seconds: 3),
-            alignment: Alignment.topRight,
-            //icon: const Icon(Icons.check)
-          );
-          Future.delayed(const Duration(seconds: 4), _navigateToLogin(context));
-        }
-        if (state.status == AuthStatus.error) {
-          // Affiche un toast en cas d'erreur
-          toastification.show(
-            context: context,
-            type: ToastificationType.error,
-            style: ToastificationStyle.fillColored,
-            title: const Text('Failed to sign up'),
-            description: Text(state.error.toString()),
-            autoCloseDuration: const Duration(seconds: 6),
-            alignment: Alignment.topRight,
-            //icon: const Icon(Icons.error)
-          );
-        }
+        handleAuthState(state);
       },
       child: Scaffold(
         backgroundColor: const Color(0xFF8B0000),
@@ -222,5 +198,17 @@ class _SignupScreenState extends State<SignupScreen> {
     return () {
       GoRouter.of(context).go(LoginScreen.routeName);
     };
+  }
+
+  void handleAuthState(AuthState state) {
+    if (state.status == AuthStatus.success) {
+      showCustomToast(context,
+          type: ToastificationType.success, title: "Account created", description: "Welcome to WikiTwiki - You can now login");
+      Future.delayed(const Duration(seconds: 4), _navigateToLogin(context));
+    }
+    if (state.status == AuthStatus.error) {
+      showCustomToast(context,
+          type: ToastificationType.error, title: "Failed to sign up", description: state.error.toString());
+    }
   }
 }
