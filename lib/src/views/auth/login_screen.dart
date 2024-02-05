@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:toastification/toastification.dart';
 import 'package:wiki_tricky/src/helpers/validators.dart';
 import 'package:wiki_tricky/src/views/auth/signup_screen.dart';
 
@@ -31,66 +32,98 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-    return Scaffold(
-      backgroundColor: Color(0xFF8B0000),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 40),
-                const SizedBox(
-                  height: 200,
-                  child: Image(
-                    image: AssetImage('assets/logo_wiki_twiki_white.png'),
-                  ),
-                ),
-                const Text(
-                  'Welcome Back!',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 30,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Login to continue',
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white70,
-                    fontSize: 18,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
-                _buildLoginForm(context),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Don\'t have an account?',
-                      style: TextStyle(color: Colors.grey),
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state.status == AuthStatus.success) {
+          toastification.show(
+            context: context,
+            type: ToastificationType.success,
+            style: ToastificationStyle.fillColored,
+            title: const Text('Success'),
+            description: const Text('Ready to continue'),
+            autoCloseDuration: const Duration(seconds: 3),
+            alignment: Alignment.topRight,
+            //icon: const Icon(Icons.check)
+          );
+          Future.delayed(
+            const Duration(seconds: 4),
+            //TODO: navigate to homePage
+          );
+        }
+        if (state.status == AuthStatus.error) {
+          toastification.show(
+            context: context,
+            type: ToastificationType.error,
+            style: ToastificationStyle.fillColored,
+            title: const Text('Failed to log in'),
+            description: Text(state.error.toString()),
+            autoCloseDuration: const Duration(seconds: 6),
+            alignment: Alignment.topRight,
+            //icon: const Icon(Icons.error)
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Color(0xFF8B0000),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 40),
+                  const SizedBox(
+                    height: 200,
+                    child: Image(
+                      image: AssetImage('assets/logo_wiki_twiki_white.png'),
                     ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        textStyle: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                        ),
+                  ),
+                  const Text(
+                    'Welcome Back',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 30,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Login to continue',
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white70,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  _buildLoginForm(context),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Don\'t have an account?',
+                        style: TextStyle(color: Colors.grey),
                       ),
-                      onPressed: () => _navigateToSignUp(context),
-                      child: const Text('Sign Up'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 40),
-              ],
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                        onPressed: () => _navigateToSignUp(context),
+                        child: const Text('Sign Up'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              ),
             ),
           ),
         ),
@@ -147,15 +180,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 return state.status == AuthStatus.loading
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
-                  onPressed: () => _validateForm(context),
-                  child: const Text(
-                    'Go',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
-                  ),
-                );
+                        onPressed: () => _validateForm(context),
+                        child: const Text(
+                          'Go',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                      );
               },
             ),
             TextButton(

@@ -9,7 +9,7 @@ enum AuthStatus {
 
 class AuthState {
   final AuthStatus status;
-  final Exception? error;
+  final ApiError? error;
 
   AuthState({
     this.status = AuthStatus.initial,
@@ -18,7 +18,7 @@ class AuthState {
 
   AuthState copyWith({
     AuthStatus? status,
-    Exception? error,
+    ApiError? error,
   }) {
     return AuthState(
       status: status ?? this.status,

@@ -1,9 +1,9 @@
 class ApiError implements Exception{
-  final int code;
-  final String message;
-  final String payload;
+  final int? code;
+  final String? message;
+  final String? payload;
 
-  ApiError({required this.code, required this.message, this.payload = ''});
+  ApiError({this.code, required this.message, this.payload = ''});
 
   factory ApiError.fromJson(Map<String, dynamic> json) {
     return ApiError(
@@ -14,5 +14,11 @@ class ApiError implements Exception{
   }
 
   @override
-  String toString() => 'Error: $code - $message';
+  String toString() {
+    if (payload!.isNotEmpty) {
+      return '$message - $payload';
+    }
+
+    return message!;
+  }
 }

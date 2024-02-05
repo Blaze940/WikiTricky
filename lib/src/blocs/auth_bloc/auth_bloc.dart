@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:wiki_tricky/src/models/api_error.dart';
 import 'package:wiki_tricky/src/services/secure_storage_service.dart';
 import '../../services/auth_api_service.dart';
 
@@ -21,37 +23,41 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       LoginRequested event, Emitter<AuthState> emit) async {
     emit(state.copyWith(status: AuthStatus.loading));
     try {
-      final authToken =
-          await apiService.login(event.email, event.password);
+      final authToken = await apiService.login(event.email, event.password);
       await secureStorageService.saveAuthToken(authToken);
       emit(state.copyWith(status: AuthStatus.success));
-      //print("authToken login bloc: " + authToken.toString());
-      //return authToken;
-    } catch (e) {
+      return authToken;
+    } on DioException catch (e) {
       emit(state.copyWith(
           status: AuthStatus.error,
-          error: Exception('Failed to login - ' + e.toString())));
-      //print("error login bloc : " + e.toString());
+          error: ApiError(
+              message: e.response?.data['message'] ?? "Something went wrong. Try later ...")));
+    } on Exception {
+      emit(state.copyWith(
+          status: AuthStatus.error,
+          error: ApiError(
+              message: "Something went wrong. Try later ...")));
     }
     return null;
   }
 
-  Future<String?> _onSignUpRequested(
+  Future<void> _onSignUpRequested(
       SignupRequested event, Emitter<AuthState> emit) async {
     emit(state.copyWith(status: AuthStatus.loading));
     try {
-      final authToken =
-          await apiService.signup(event.email, event.username, event.password);
-      //print('authResponse =' + authToken.toString());
-      await secureStorageService.saveAuthToken(authToken);
+      await apiService.signup(event.email, event.username, event.password);
       emit(state.copyWith(status: AuthStatus.success));
-      //print
+    } on DioException catch (e) {
+      emit(state.copyWith(
+          status: AuthStatus.error,
+          error: ApiError(
+              message: e.response?.data['message'] ?? "Something went wrong. Try later ...")));
     } catch (e) {
       emit(state.copyWith(
           status: AuthStatus.error,
-          error: Exception('Failed to signup - ' + e.toString())));
+          error: ApiError(
+              message: "Something went wrong. Try later ...")));
     }
-    return null;
   }
 
   Future<void> _onLogoutRequested(
@@ -61,8 +67,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(status: AuthStatus.initial));
     } catch (e) {
       emit(state.copyWith(
-          status: AuthStatus.error,
-          error: Exception('Failed to logout - ' + e.toString())));
+          //TODO: Handle error
+          status: AuthStatus.error));
     }
   }
 }

@@ -7,9 +7,9 @@ class AuthApiService {
   final Dio _dio = Dio();
   final String baseAuthUrl = "https://xoc1-kd2t-7p9b.n7c.xano.io/api:xbcc5VEi/auth";
 
-  Future<String> signup(String email, String name, String password) async {
+  Future<void> signup(String email, String name, String password) async {
     try {
-      final response = await _dio.post(
+         await _dio.post(
         "$baseAuthUrl/signup",
         data: {
           'email': email,
@@ -17,18 +17,8 @@ class AuthApiService {
           'password': password,
         },
       );
-      //Jusqu'ici tout va bien
-      //print('responseData =' + response.data);
-      //final authResponse = AuthResponse.fromJson(response.data);
-      //print('authResponse =' + authResponse.toString());
-      return response.data['authToken'] ;
-      //return authResponse;
-    } on DioException catch (e) {
-      throw AuthApiException(
-        code: e.response?.statusCode ?? 500,
-        message: e.response?.statusMessage ?? 'Unknown error',
-        payload: e.response?.data['payload'] ?? '',
-      );
+    } on DioException {
+      rethrow;
     }
   }
 
@@ -42,12 +32,8 @@ class AuthApiService {
         },
       );
       return response.data['authToken'] ;
-    } on DioException catch (e) {
-      throw AuthApiException(
-        code: e.response?.statusCode ?? 500,
-        message: e.response?.statusMessage ?? 'Unknown error',
-        payload: e.response?.data['payload'] ?? '',
-      );
+    } on DioException{
+      rethrow ;
     }
   }
 

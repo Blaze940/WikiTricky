@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:wiki_tricky/src/helpers/validators.dart';
 import 'package:toastification/toastification.dart';
 
-// Ajustez le chemin selon votre structure de projet
 import '../../blocs/auth_bloc/auth_bloc.dart';
 import 'login_screen.dart';
 
@@ -43,7 +42,7 @@ class _SignupScreenState extends State<SignupScreen> {
             title: const Text('Account created '),
             description: const Text('Welcome to WikiTwiki - You can now login'),
             autoCloseDuration: const Duration(seconds: 3),
-            alignment: Alignment.bottomCenter,
+            alignment: Alignment.topRight,
             //icon: const Icon(Icons.check)
           );
           Future.delayed(const Duration(seconds: 4), _navigateToLogin(context));
@@ -55,9 +54,9 @@ class _SignupScreenState extends State<SignupScreen> {
             type: ToastificationType.error,
             style: ToastificationStyle.fillColored,
             title: const Text('Failed to sign up'),
-            description: const Text('Account already exists. Use unique email and username'),
+            description: Text(state.error.toString()),
             autoCloseDuration: const Duration(seconds: 6),
-            alignment: Alignment.bottomCenter,
+            alignment: Alignment.topRight,
             //icon: const Icon(Icons.error)
           );
         }
