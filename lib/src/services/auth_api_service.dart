@@ -1,15 +1,13 @@
 import 'package:dio/dio.dart';
 
-import '../exceptions/auth_api_exception.dart';
-
-
 class AuthApiService {
   final Dio _dio = Dio();
-  final String baseAuthUrl = "https://xoc1-kd2t-7p9b.n7c.xano.io/api:xbcc5VEi/auth";
+  final String baseAuthUrl =
+      "https://xoc1-kd2t-7p9b.n7c.xano.io/api:xbcc5VEi/auth";
 
   Future<void> signup(String email, String name, String password) async {
     try {
-         await _dio.post(
+      await _dio.post(
         "$baseAuthUrl/signup",
         data: {
           'email': email,
@@ -31,9 +29,9 @@ class AuthApiService {
           'password': password,
         },
       );
-      return response.data['authToken'] ;
-    } on DioException{
-      rethrow ;
+      return response.data['authToken'];
+    } on DioException {
+      rethrow;
     }
   }
 

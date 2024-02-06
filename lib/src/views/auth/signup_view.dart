@@ -6,18 +6,18 @@ import 'package:toastification/toastification.dart';
 import 'package:wiki_tricky/src/services/toast_service.dart';
 
 import '../../blocs/auth_bloc/auth_bloc.dart';
-import 'login_screen.dart';
+import 'login_view.dart';
 
-class SignupScreen extends StatefulWidget {
+class SignupView extends StatefulWidget {
   static const String routeName = '/signup';
 
-  const SignupScreen({Key? key}) : super(key: key);
+  const SignupView({Key? key}) : super(key: key);
 
   @override
-  _SignupScreenState createState() => _SignupScreenState();
+  _SignupViewState createState() => _SignupViewState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignupViewState extends State<SignupView> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _usernameController = TextEditingController();
@@ -196,7 +196,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   _navigateToLogin(BuildContext context) {
     return () {
-      GoRouter.of(context).go(LoginScreen.routeName);
+      GoRouter.of(context).go(LoginView.routeName);
     };
   }
 

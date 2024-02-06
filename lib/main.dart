@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wiki_tricky/src/blocs/auth_bloc/auth_bloc.dart';
 import 'package:wiki_tricky/src/services/auth_api_service.dart';
 import 'package:wiki_tricky/src/services/secure_storage_service.dart';
-import 'package:wiki_tricky/src/views/auth/login_screen.dart';
-import 'package:wiki_tricky/src/views/auth/signup_screen.dart';
+import 'package:wiki_tricky/src/views/auth/login_view.dart';
+import 'package:wiki_tricky/src/views/auth/signup_view.dart';
+import 'package:wiki_tricky/src/views/navigation/navigation_view.dart';
 import 'config/app_theme.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,15 +14,15 @@ void main() {
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => LoginScreen(),
+        builder: (context, state) => const NavigationView(),
       ),
       GoRoute(
-        path: LoginScreen.routeName,
-        builder: (context, state) => LoginScreen(),
+        path: LoginView.routeName,
+        builder: (context, state) => const LoginView(),
       ),
       GoRoute(
-        path: SignupScreen.routeName,
-        builder: (context, state) => const SignupScreen(),
+        path: SignupView.routeName,
+        builder: (context, state) =>  const SignupView(),
       ),
     ],
   );

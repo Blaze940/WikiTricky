@@ -12,6 +12,7 @@ class SecureStorageService {
       return await _storage.read(key: 'authToken');
     } catch (e) {
       //print("error getAuthToken: " + e.toString());
+
       throw Exception('Failed to get auth token - ' + e.toString());
     }
   }
