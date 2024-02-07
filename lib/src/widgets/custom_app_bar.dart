@@ -15,47 +15,66 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
-      builder: (context, state) {
-        return AppBar(
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            spreadRadius: 0,
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+        child: AppBar(
           backgroundColor: const Color(0xFF8B0000),
-          elevation: 0,
-          leading: state.status == AuthStatus.success
-              ? IconButton(
-                  icon: const Icon(Icons.account_circle, color: Colors.green),
-                  onPressed: () {
-                    // TODO: Navigate to profile
-                  },
-                )
-              : const Icon(Icons.no_accounts, color: Colors.white),
+          elevation: 20,
+          leading: BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              return state.status == AuthStatus.success
+                  ? IconButton(
+                icon: const Icon(Icons.account_circle, color: Colors.white),
+                onPressed: () {
+                  // TODO: Navigate to profile
+                },
+              )
+                  : const Icon(Icons.no_accounts, color: Colors.grey);
+            },
+          ),
           title: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset('assets/logo_wiki_twiki_white.png', height: 40),
-              SizedBox(width: 2),
+              const SizedBox(width: 2),
               Text(
                 titleText,
                 style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18),
+                    color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18, shadows:
+                    [Shadow(color: Colors.black, blurRadius: 2, offset: Offset(0, 2))]
               ),
+            ),
             ],
           ),
           centerTitle: true,
           actions: <Widget>[
-            state.status == AuthStatus.success
-                ? IconButton(
-                    icon: const Icon(Icons.logout, color: Colors.white),
-                    onPressed: () => _showLogoutDialog(context),
-                  )
-                : IconButton(
-                    icon: const Icon(Icons.login, color: Colors.white),
-                    onPressed: () => _showLoginDialog(context),
-                  ),
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                return state.status == AuthStatus.success
+                    ? IconButton(
+                  icon: const Icon(Icons.logout, color: Colors.white),
+                  onPressed: () => _showLogoutDialog(context),
+                )
+                    : IconButton(
+                  icon: const Icon(Icons.login, color: Colors.white),
+                  onPressed: () => _showLoginDialog(context),
+                );
+              },
+            ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 

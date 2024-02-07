@@ -1,6 +1,6 @@
 class User {
-  String id;
-  String created_at;
+  final int id;
+  final int created_at;
   String name;
   String email;
 
@@ -20,13 +20,6 @@ class User {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['created_at'] = created_at;
-    data['name'] = name;
-    data['email'] = email;
-    return data;
-  }
+  //USELESS TO COPY , TOJSON BECAUSE NO ROUTES FOR PATCH
 
 }

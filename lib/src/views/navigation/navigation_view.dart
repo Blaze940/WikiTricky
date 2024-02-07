@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wiki_tricky/src/widgets/custom_app_bar.dart';
+import 'package:wiki_tricky/src/widgets/custom_nav_bar.dart';
 
 class NavigationView extends StatelessWidget {
   static const String routeName = '/home';
@@ -28,18 +29,10 @@ class NavigationView extends StatelessWidget {
             );
           },
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-            ],
-          backgroundColor: const Color(0xFF8B0000),
-          selectedItemColor: Colors.white,
-        ),
+        bottomNavigationBar: const CustomBottomNavBar(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // Action pour créer un nouveau post
+            //Todo: Action to create post
           },
           backgroundColor: const Color(0xFF8B0000),
           child: const Icon(Icons.edit_note, color: Colors.white),
