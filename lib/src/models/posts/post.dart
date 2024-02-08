@@ -1,6 +1,8 @@
-import 'item.dart';
 
-class ApiResponse {
+
+import '../items/item.dart';
+
+class Post {
   final int itemsReceived;
   final int curPage;
   final int? nextPage;
@@ -10,7 +12,7 @@ class ApiResponse {
   final int pageTotal;
   final List<Item> items;
 
-  ApiResponse({
+  Post({
     required this.itemsReceived,
     required this.curPage,
     required this.nextPage,
@@ -21,8 +23,8 @@ class ApiResponse {
     required this.items,
   });
 
-  factory ApiResponse.fromJson(Map<String, dynamic> json) {
-    return ApiResponse(
+  factory Post.fromJson(Map<String, dynamic> json) {
+    return Post(
       itemsReceived: json['itemsReceived'],
       curPage: json['curPage'],
       nextPage: json['nextPage'],
@@ -31,6 +33,28 @@ class ApiResponse {
       itemsTotal: json['itemsTotal'],
       pageTotal: json['pageTotal'],
       items: List<Item>.from(json['items'].map((x) => Item.fromJson(x))),
+    );
+  }
+  
+  copyWith(Post post, {
+    int? itemsReceived,
+    int? curPage,
+    int? nextPage,
+    int? prevPage,
+    int? offset,
+    int? itemsTotal,
+    int? pageTotal,
+    List<Item>? items,
+  }) {
+    return Post(
+      itemsReceived: itemsReceived ?? this.itemsReceived,
+      curPage: curPage ?? this.curPage,
+      nextPage: nextPage ?? this.nextPage,
+      prevPage: prevPage ?? this.prevPage,
+      offset: offset ?? this.offset,
+      itemsTotal: itemsTotal ?? this.itemsTotal,
+      pageTotal: pageTotal ?? this.pageTotal,
+      items: items ?? this.items,
     );
   }
 }

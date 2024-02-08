@@ -20,6 +20,8 @@ class User {
     );
   }
 
+
+
   //USELESS TO COPY , TOJSON BECAUSE NO ROUTES FOR PATCH
 
 }

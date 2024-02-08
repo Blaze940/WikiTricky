@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wiki_tricky/src/blocs/auth_bloc/auth_bloc.dart';
-import 'package:wiki_tricky/src/services/auth_api_service.dart';
+import 'package:wiki_tricky/src/blocs/posts_bloc/post_bloc.dart';
+import 'package:wiki_tricky/src/services/api_call/auth_api_service.dart';
+import 'package:wiki_tricky/src/services/api_call/post_api_service.dart';
 import 'package:wiki_tricky/src/services/secure_storage_service.dart';
 import 'package:wiki_tricky/src/views/auth/login_view.dart';
 import 'package:wiki_tricky/src/views/auth/signup_view.dart';
@@ -11,7 +13,8 @@ import 'package:go_router/go_router.dart';
 
 void main() {
   final goRouter = GoRouter(
-    routes: [
+    routes:
+    [
       GoRoute(
         path: '/',
         builder: (context, state) => const NavigationView(),
@@ -42,11 +45,14 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthBloc>(
           create: (context) => AuthBloc(AuthApiService(),SecureStorageService()),
         ),
+        BlocProvider<PostBloc>(
+            create: (context) => PostBloc(PostApiService(),SecureStorageService())
+        )
       ],
       child: MaterialApp.router(
         routerConfig: goRouter,
         debugShowCheckedModeBanner: false,
-        title: 'WikiTricky',
+        title: 'WikiTwiki',
         theme: buildAppTheme(),
       ),
     );

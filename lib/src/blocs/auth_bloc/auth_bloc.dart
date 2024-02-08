@@ -3,17 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:wiki_tricky/src/models/api_error.dart';
 import 'package:wiki_tricky/src/services/secure_storage_service.dart';
-import '../../services/auth_api_service.dart';
+import 'package:wiki_tricky/src/services/api_call/auth_api_service.dart';
 
 part 'auth_event.dart';
 
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthApiService apiService;
+  final AuthApiService authApiService;
   final SecureStorageService secureStorageService;
 
-  AuthBloc(this.apiService, this.secureStorageService) : super(AuthState()) {
+  AuthBloc(this.authApiService, this.secureStorageService) : super(AuthState()) {
     on<LoginRequested>(_onLoginRequested);
     on<SignupRequested>(_onSignUpRequested);
     on<LogoutRequested>(_onLogoutRequested);
@@ -23,7 +23,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       LoginRequested event, Emitter<AuthState> emit) async {
     emit(state.copyWith(status: AuthStatus.loading));
     try {
-      final authToken = await apiService.login(event.email, event.password);
+      final authToken = await authApiService.login(event.email, event.password);
       await secureStorageService.saveAuthToken(authToken);
       emit(state.copyWith(status: AuthStatus.success));
       return authToken;
@@ -45,7 +45,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       SignupRequested event, Emitter<AuthState> emit) async {
     emit(state.copyWith(status: AuthStatus.loading));
     try {
-      await apiService.signup(event.email, event.username, event.password);
+      await authApiService.signup(event.email, event.username, event.password);
       emit(state.copyWith(status: AuthStatus.success));
     } on DioException catch (e) {
       emit(state.copyWith(
