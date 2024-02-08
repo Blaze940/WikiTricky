@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wiki_tricky/src/blocs/posts_bloc/post_bloc.dart';
 import 'package:wiki_tricky/src/widgets/custom_app_bar.dart';
 import 'package:wiki_tricky/src/widgets/custom_nav_bar.dart';
+import 'package:wiki_tricky/src/widgets/post_card.dart';
 
 class NavigationView extends StatefulWidget {
   static const String routeName = '/home';
@@ -38,23 +39,16 @@ class _NavigationViewState extends State<NavigationView> {
               itemBuilder: (context, index) {
                 if (index < items.length) {
                   final item = items[index];
-                  return Card(
-                    margin: const EdgeInsets.all(8),
-                    child: ListTile(
-                      title: Text(item.content, style: TextStyle(color: Colors.black)),
-                      subtitle: Text('Item ID: ${item.id}'),
-                      trailing: const Icon(Icons.favorite_border, color: Color(0xFF8B0000)),
-                    ),
-                  );
+                  return PostCard(item: item);
                 } else {
                   return isLoadingNextPage
-                      ? Center(child: CircularProgressIndicator())
+                      ? const Center(child: CircularProgressIndicator())
                       : Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Center(
                       child: ElevatedButton(
                         onPressed: () => BlocProvider.of<PostBloc>(context).add(GetNextItems(state.currentPost!.nextPage!)),
-                        child: Text('Charger items suivants'),
+                        child: const Text("Load more"),
                       ),
                     ),
                   );
