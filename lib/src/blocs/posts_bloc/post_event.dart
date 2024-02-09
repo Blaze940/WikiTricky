@@ -10,3 +10,10 @@ class GetNextItems extends PostEvent {
 
   GetNextItems(this.page);
 }
+
+class CreatePost extends PostEvent {
+  final PostCreateRequest postCreateRequest;
+  final String authToken;
+
+  CreatePost(this.postCreateRequest, this.authToken);
+}

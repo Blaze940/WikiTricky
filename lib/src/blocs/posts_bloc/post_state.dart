@@ -2,8 +2,10 @@ part of 'post_bloc.dart';
 
 enum PostStatus {
   initial,
-  loading,
-  success,
+  loadingGetItems,
+  successGetItems,
+  loadingCreatePost,
+  successCreatePost,
   error,
 }
 

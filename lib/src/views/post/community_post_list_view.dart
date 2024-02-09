@@ -34,7 +34,7 @@ class _CommunityPostListViewState extends State<CommunityPostListView> {
   void _onScroll() {
     if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.6) {
       final postBloc = BlocProvider.of<PostBloc>(context, listen: false);
-      if (postBloc.state.currentPost?.nextPage != null && postBloc.state.status != PostStatus.loading) {
+      if (postBloc.state.currentPost?.nextPage != null && postBloc.state.status != PostStatus.loadingGetItems) {
         postBloc.add(GetNextItems(postBloc.state.currentPost!.nextPage!));
       }
     }
@@ -49,12 +49,12 @@ class _CommunityPostListViewState extends State<CommunityPostListView> {
       child: BlocBuilder<PostBloc, PostState>(
         builder: (context, state) {
           final items = state.items;
-          if (items.isEmpty && state.status == PostStatus.loading) {
+          if (items.isEmpty && state.status == PostStatus.loadingGetItems) {
             return ListView.builder(
               itemCount: 1,
               itemBuilder: (context, index) => const Center(child: CircularProgressIndicator()),
             );
-          } else if (items.isEmpty && state.status == PostStatus.success) {
+          } else if (items.isEmpty && state.status == PostStatus.successGetItems) {
             return ListView(
               children: const [Center(child: Text("No post yet"))],
             );

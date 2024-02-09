@@ -8,6 +8,7 @@ import 'package:wiki_tricky/src/services/secure_storage_service.dart';
 
 import '../../models/api_error.dart';
 import '../../models/items/item.dart';
+import '../../models/items/post_create_request.dart';
 import '../../models/posts/post.dart';
 
 part 'post_event.dart';
@@ -20,13 +21,14 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   PostBloc(this.postApiService, this.secureStorageService) : super(const PostState()) {
     on<GetItems>(_onGetItems);
     on<GetNextItems>(_onGetNextItems);
+    on<CreatePost>(_onCreatePost);
   }
 
   Future<void> _onGetItems(GetItems event, Emitter<PostState> emit) async {
-    emit(state.copyWith(status: PostStatus.loading));
+    emit(state.copyWith(status: PostStatus.loadingGetItems));
     try {
       final firstPost = await postApiService.getFirstPostRecords();
-      emit(state.copyWith(status:PostStatus.success, currentPost: firstPost, items: firstPost.items));
+      emit(state.copyWith(status:PostStatus.successGetItems, currentPost: firstPost, items: firstPost.items));
     } on DioException catch (e) {
       emit(state.copyWith(
           status: PostStatus.error,
@@ -41,12 +43,12 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Future<void> _onGetNextItems(GetNextItems event, Emitter<PostState> emit) async {
-    if (state.status != PostStatus.loading) {
-      emit(state.copyWith(status: PostStatus.loading));
+    if (state.status != PostStatus.loadingGetItems) {
+      emit(state.copyWith(status: PostStatus.loadingGetItems));
       try {
         final nextPost = await postApiService.getNextPagePostRecords(event.page);
         final allItems = List<Item>.from(state.items)..addAll(nextPost.items);
-        emit(state.copyWith(status: PostStatus.success, currentPost: nextPost, items: allItems));
+        emit(state.copyWith(status: PostStatus.successGetItems, currentPost: nextPost, items: allItems));
       } on DioException catch (e) {
         emit(state.copyWith(
             status: PostStatus.error,
@@ -57,6 +59,24 @@ class PostBloc extends Bloc<PostEvent, PostState> {
             status: PostStatus.error,
             error: ApiError(message: "Something went wrong during fetching. Try later ...")));
       }
+    }
+  }
+
+  Future<void> _onCreatePost(CreatePost event, Emitter<PostState> emit) async {
+    emit(state.copyWith(status: PostStatus.loadingCreatePost));
+    try {
+      final postCreateRequestJSON = event.postCreateRequest.toJson();
+      await postApiService.createPost(postCreateRequestJSON, event.authToken);
+      emit(state.copyWith(status: PostStatus.successCreatePost));
+    } on DioException catch (e) {
+      emit(state.copyWith(
+          status: PostStatus.error,
+          error: ApiError(
+              message: e.response?.data['message'] ?? "Something went wrong during creating. Try later ...")));
+    } on Exception {
+      emit(state.copyWith(
+          status: PostStatus.error,
+          error: ApiError(message: "Something went wrong during creating. Try later ...")));
     }
   }
 

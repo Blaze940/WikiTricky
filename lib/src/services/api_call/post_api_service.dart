@@ -25,4 +25,14 @@ class PostApiService {
       rethrow;
     }
    }
+
+   Future<void> createPost(Map<String, dynamic> postCreateRequest, String authToken) async {
+     try {
+       //pass authToken as bearer token
+       _dio.options.headers['Authorization'] = 'Bearer $authToken';
+       await _dio.post("$basePostUrl", data: postCreateRequest);
+     } on DioException {
+       rethrow;
+     }
+   }
 }

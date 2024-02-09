@@ -11,7 +11,7 @@ class PostCreateRequest {
    Map<String, dynamic> toJson() {
     return {
       'content': content,
-      if (base_64_image != null) 'base64Image': base_64_image,
+      if (base_64_image != null) 'base_64_image': base_64_image,
     };
   }
 }
