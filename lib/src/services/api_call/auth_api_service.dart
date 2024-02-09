@@ -20,7 +20,7 @@ class AuthApiService {
     }
   }
 
-  Future<String> login(String email, String password) async {
+  Future<Map<String,dynamic>> login(String email, String password) async {
     try {
       final response = await _dio.post(
         "$baseAuthUrl/login",
@@ -29,7 +29,7 @@ class AuthApiService {
           'password': password,
         },
       );
-      return response.data['authToken'];
+      return response.data;
     } on DioException {
       rethrow;
     }

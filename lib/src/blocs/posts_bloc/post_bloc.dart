@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
+import 'package:wiki_tricky/src/models/items/post_update_request.dart';
 import 'package:wiki_tricky/src/services/api_call/post_api_service.dart';
 import 'package:wiki_tricky/src/services/secure_storage_service.dart';
 
@@ -22,6 +23,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<GetItems>(_onGetItems);
     on<GetNextItems>(_onGetNextItems);
     on<CreatePost>(_onCreatePost);
+    on<UpdatePost>(_onUpdatePost);
+    on<DeletePost>(_onDeletePost);
   }
 
   Future<void> _onGetItems(GetItems event, Emitter<PostState> emit) async {
@@ -79,6 +82,42 @@ class PostBloc extends Bloc<PostEvent, PostState> {
           error: ApiError(message: "Something went wrong during creating. Try later ...")));
     }
   }
+
+  Future<void> _onUpdatePost(UpdatePost event, Emitter<PostState> emit) async {
+    emit(state.copyWith(status: PostStatus.loadingUpdatePost));
+    try {
+      final postUpdateRequestJSON = event.postUpdateRequest.toJson();
+      await postApiService.updatePost(postUpdateRequestJSON, event.authToken);
+      emit(state.copyWith(status: PostStatus.successUpdatePost));
+    } on DioException catch (e) {
+      emit(state.copyWith(
+          status: PostStatus.error,
+          error: ApiError(
+              message: e.response?.data['message'] ?? "Something went wrong during updating. Try later ...")));
+    } on Exception {
+      emit(state.copyWith(
+          status: PostStatus.error,
+          error: ApiError(message: "Something went wrong during updating. Try later ...")));
+    }
+  }
+
+  Future<void> _onDeletePost(DeletePost event, Emitter<PostState> emit) async {
+    emit(state.copyWith(status: PostStatus.loadingDeletePost));
+    try {
+      await postApiService.deletePost(event.post_id, event.authToken);
+      emit(state.copyWith(status: PostStatus.successDeletePost));
+    } on DioException catch (e) {
+      emit(state.copyWith(
+          status: PostStatus.error,
+          error: ApiError(
+              message: e.response?.data['message'] ?? "Something went wrong during deleting. Try later ...")));
+    } on Exception {
+      emit(state.copyWith(
+          status: PostStatus.error,
+          error: ApiError(message: "Something went wrong during deleting. Try later ...")));
+    }
+  }
+
 
 
 }

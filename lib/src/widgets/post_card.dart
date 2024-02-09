@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import '../blocs/auth_bloc/auth_bloc.dart';
 import '../models/items/item.dart';
 
 class PostCard extends StatelessWidget {
@@ -10,6 +12,11 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    final isLoggedIn = authBloc.state.status == AuthStatus.success;
+    final currentUser = authBloc.state.user;
+    final canEdit = isLoggedIn && currentUser?.id == item.author.id;
+
     return Container(
       margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -20,7 +27,7 @@ class PostCard extends StatelessWidget {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 1,
             blurRadius: 5,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: Offset(0, 3),
           ),
         ],
       ),
@@ -51,14 +58,25 @@ class PostCard extends StatelessWidget {
                           fontSize: 16,
                         ),
                       ),
-                      Text(
-                        DateFormat('dd MMM yyyy, HH:mm').format(
-                          DateTime.fromMillisecondsSinceEpoch(item.createdAt),
-                        ),
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            DateFormat('dd MMM yyyy, HH:mm').format(
+                              DateTime.fromMillisecondsSinceEpoch(item.createdAt),
+                            ),
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 12,
+                            ),
+                          ),
+                          if (canEdit)
+                            IconButton(
+                              icon: Icon(Icons.delete, color: Color(0xFF8B0000), size: 20), // Couleur rouge pour l'icône
+                              onPressed: () {
+                                // Logique pour supprimer le post
+                              },
+                            ),
+                        ],
                       ),
                     ],
                   ),
@@ -85,15 +103,32 @@ class PostCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      ElevatedButton.icon(
-                        icon: Icon(Icons.visibility, size: 16),
-                        label: Text('Details', style: TextStyle(fontSize: 12)),
-                        onPressed: () {
-                          // Navigate to details page
-                        },
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white, backgroundColor: Color(0xFF8B0000), // Text Color (Foreground color)
-                        ),
+                      Row(
+                        children: [
+                          if (canEdit)
+                            ElevatedButton.icon(
+                              icon: Icon(Icons.edit, size: 16),
+                              label: Text('Edit', style: TextStyle(fontSize: 12)),
+                              onPressed: () {
+                                // Logique pour modifier le post
+                              }
+                              ,style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.white, backgroundColor: Theme.of(context).primaryColor,
+                              )
+                            ),
+
+                          SizedBox(width: 8),
+                          ElevatedButton.icon(
+                            icon: Icon(Icons.visibility, size: 16),
+                            label: Text('Details', style: TextStyle(fontSize: 12)),
+                            onPressed: () {
+                              // Logique pour naviguer vers la page de détails
+                            },
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white, backgroundColor: Color(0xFF8B0000),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

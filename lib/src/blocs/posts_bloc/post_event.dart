@@ -17,3 +17,19 @@ class CreatePost extends PostEvent {
 
   CreatePost(this.postCreateRequest, this.authToken);
 }
+
+class UpdatePost extends PostEvent {
+  final PostUpdateRequest postUpdateRequest;
+  final String authToken;
+
+  UpdatePost(this.postUpdateRequest, this.authToken);
+}
+
+class DeletePost extends PostEvent {
+  final int post_id;
+  final String authToken;
+
+  DeletePost(this.post_id, this.authToken);
+}
+
+
