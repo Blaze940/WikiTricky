@@ -13,7 +13,7 @@ import '../auth/login_view.dart';
 import '../post/community_post_list_view.dart';
 
 class NavigationView extends StatelessWidget {
-  static const String routeName = '/home';
+  static const String routeName = '/';
 
   const NavigationView({Key? key}) : super(key: key);
 

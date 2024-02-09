@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:wiki_tricky/src/helpers/validators.dart';
 import 'package:toastification/toastification.dart';
 import 'package:wiki_tricky/src/services/toast_service.dart';
 
 import '../../blocs/auth_bloc/auth_bloc.dart';
-import 'login_view.dart';
+import '../../services/router_service.dart';
 
 class SignupView extends StatefulWidget {
   static const String routeName = '/signup';
@@ -90,7 +89,7 @@ class _SignupViewState extends State<SignupView> {
                               decoration: TextDecoration.underline,
                             ),
                           ),
-                          onPressed: _navigateToLogin(context),
+                          onPressed: () => navigateToLogin(context),
                           child: const Text('Login')),
                     ],
                   ),
@@ -194,17 +193,12 @@ class _SignupViewState extends State<SignupView> {
     }
   }
 
-  _navigateToLogin(BuildContext context) {
-    return () {
-      GoRouter.of(context).go(LoginView.routeName);
-    };
-  }
 
   void handleAuthState(AuthState state) {
     if (state.status == AuthStatus.success) {
       showCustomToast(context,
           type: ToastificationType.success, title: "Account created", description: "Welcome to WikiTwiki - You can now login");
-      Future.delayed(const Duration(seconds: 4), _navigateToLogin(context));
+      Future.delayed(const Duration(seconds: 4), navigateToLogin(context));
     }
     if (state.status == AuthStatus.error) {
       showCustomToast(context,

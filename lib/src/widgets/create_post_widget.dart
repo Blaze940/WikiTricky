@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:toastification/toastification.dart';
 import 'package:wiki_tricky/src/services/secure_storage_service.dart';
 import 'package:wiki_tricky/src/services/toast_service.dart';
-import 'package:wiki_tricky/src/views/auth/login_view.dart';
 import '../blocs/auth_bloc/auth_bloc.dart';
 import '../services/dialog_service.dart';
+import '../services/router_service.dart';
 import 'create_post_dialog.dart';
 
 class CreatePostWidget extends StatelessWidget {
@@ -35,7 +34,7 @@ class CreatePostWidget extends StatelessWidget {
                 message: 'Your session has expired. Please log in again.',
                 buttonTextPositive: 'Go',
                 buttonTextNegative: 'Later',
-                onPositivePressed: () => _navigateToLogin(context),
+                onPositivePressed: () => navigateToLogin(context),
                 onNegativePressed: () => Navigator.of(context).pop(),
               );
       } catch (e) {
@@ -48,14 +47,10 @@ class CreatePostWidget extends StatelessWidget {
         message: 'You need to be logged in first to create a post.',
         buttonTextPositive: 'Log In',
         buttonTextNegative: 'No thanks',
-        onPositivePressed: () => _navigateToLogin(context),
+        onPositivePressed: () => navigateToLogin(context),
         onNegativePressed: () => Navigator.of(context).pop(),
       );
     }
-  }
-
-  void _navigateToLogin(BuildContext context) {
-    return GoRouter.of(context).go(LoginView.routeName);
   }
 
   void _showCreatePostDialog(BuildContext context, String authToken) {

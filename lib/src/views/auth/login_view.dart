@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toastification/toastification.dart';
 import 'package:wiki_tricky/src/helpers/validators.dart';
+import 'package:wiki_tricky/src/services/router_service.dart';
 import 'package:wiki_tricky/src/views/auth/signup_view.dart';
 
 import '../../blocs/auth_bloc/auth_bloc.dart';
@@ -38,7 +39,7 @@ class _LoginViewState extends State<LoginView> {
         handleAuthState(state);
       },
       child: Scaffold(
-        backgroundColor: Color(0xFF8B0000),
+        backgroundColor: const Color(0xFF8B0000),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -90,7 +91,7 @@ class _LoginViewState extends State<LoginView> {
                             decoration: TextDecoration.underline,
                           ),
                         ),
-                        onPressed: () => _navigateToSignUp(context),
+                        onPressed: () => navigateToSignup(context),
                         child: const Text('Sign Up'),
                       ),
                     ],
@@ -193,10 +194,6 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
-  void _navigateToSignUp(context) {
-    GoRouter.of(context).go(SignupView.routeName);
-  }
-
   void handleAuthState(AuthState state) {
     if (state.status == AuthStatus.success) {
       showCustomToast(
@@ -208,7 +205,7 @@ class _LoginViewState extends State<LoginView> {
       );
       Future.delayed(
         const Duration(seconds: 3),
-        () => GoRouter.of(context).go('/'),
+        () => navigateToHome(context),
       );
     }
     if (state.status == AuthStatus.error) {

@@ -5,6 +5,8 @@ import 'package:toastification/toastification.dart';
 import 'package:wiki_tricky/src/blocs/auth_bloc/auth_bloc.dart';
 import 'package:wiki_tricky/src/services/toast_service.dart';
 
+import '../services/router_service.dart';
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String titleText;
 
@@ -35,11 +37,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             builder: (context, state) {
               return state.status == AuthStatus.success
                   ? IconButton(
-                icon: const Icon(Icons.account_circle, color: Colors.white),
-                onPressed: () {
-                  // TODO: Navigate to profile
-                },
-              )
+                      icon:
+                          const Icon(Icons.account_circle, color: Colors.white),
+                      onPressed: () {
+                        // TODO: Navigate to profile
+                      },
+                    )
                   : const Icon(Icons.no_accounts, color: Colors.grey);
             },
           ),
@@ -51,10 +54,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               Text(
                 titleText,
                 style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18, shadows:
-                    [Shadow(color: Colors.black, blurRadius: 2, offset: Offset(0, 2))]
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    shadows: [
+                      Shadow(
+                          color: Colors.black,
+                          blurRadius: 2,
+                          offset: Offset(0, 2))
+                    ]),
               ),
-            ),
             ],
           ),
           centerTitle: true,
@@ -63,13 +72,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               builder: (context, state) {
                 return state.status == AuthStatus.success
                     ? IconButton(
-                  icon: const Icon(Icons.logout, color: Colors.white),
-                  onPressed: () => _showLogoutDialog(context),
-                )
+                        icon: const Icon(Icons.logout, color: Colors.white),
+                        onPressed: () => _showLogoutDialog(context),
+                      )
                     : IconButton(
-                  icon: const Icon(Icons.login, color: Colors.white),
-                  onPressed: () => _showLoginDialog(context),
-                );
+                        icon: const Icon(Icons.login, color: Colors.white),
+                        onPressed: () => _showLoginDialog(context),
+                      );
               },
             ),
           ],
@@ -167,9 +176,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       child: const Text('No'),
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        navigateToLogin(context);
-                      },
+                      onPressed: () => navigateToLogin(context),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF8B0000)),
                       child: const Text('Yes'),
@@ -182,10 +189,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         );
       },
     );
-  }
-
-  void navigateToLogin(BuildContext context) {
-    GoRouter.of(context).go('/login');
   }
 
   void disconnectUser(BuildContext context) {
