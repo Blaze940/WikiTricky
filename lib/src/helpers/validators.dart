@@ -35,3 +35,16 @@ String? validatePassword(String? value) {
 
   return null;
 }
+
+
+String? validatePostContent(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Please enter your post content';
+  }
+
+  if (value.length > 300) {
+    return 'Post content must be maximum 300 characters';
+  }
+
+  return null;
+}

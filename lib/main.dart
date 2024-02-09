@@ -43,10 +43,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
-          create: (context) => AuthBloc(AuthApiService(),SecureStorageService()),
+          create: (context) => AuthBloc(AuthApiService(),SecureStorageService.instance),
         ),
         BlocProvider<PostBloc>(
-            create: (context) => PostBloc(PostApiService(),SecureStorageService())
+            create: (context) => PostBloc(PostApiService(),SecureStorageService.instance)
         )
       ],
       child: MaterialApp.router(
