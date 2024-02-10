@@ -10,6 +10,7 @@ import '../services/dialog_service.dart';
 import '../services/router_service.dart';
 import '../services/secure_storage_service.dart';
 import '../services/toast_service.dart';
+import 'delete_post_dialog.dart';
 
 class PostCard extends StatelessWidget {
   final Item item;
@@ -78,9 +79,7 @@ class PostCard extends StatelessWidget {
                           if (canEdit)
                             IconButton(
                               icon: const Icon(Icons.delete, color: Color(0xFF8B0000), size: 20),
-                              onPressed: () {
-                                // Logique pour supprimer le post
-                              },
+                              onPressed: () => _onDeletePostPressed(context),
                             ),
                         ],
                       ),
@@ -177,6 +176,38 @@ class PostCard extends StatelessWidget {
     }
   }
 
+  _onDeletePostPressed(BuildContext context) async {
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    if (authBloc.state.status == AuthStatus.success) {
+      try {
+        final authToken = await SecureStorageService.instance.getAuthToken();
+        authToken != null
+            ? _showDeletePostDialog(context, authToken)
+            : showCustomDialog(
+          context: context,
+          title: 'Session Expired',
+          message: 'Your session has expired. Please log in again.',
+          buttonTextPositive: 'Go',
+          buttonTextNegative: 'Later',
+          onPositivePressed: () => navigateToLogin(context),
+          onNegativePressed: () => Navigator.of(context).pop(),
+        );
+      } catch (e) {
+        showCustomToast(context, type: ToastificationType.error, title: 'Session error', description: 'An error occurred. Please try again later.');
+      }
+    } else {
+      showCustomDialog(
+        context: context,
+        title: 'No Session Found',
+        message: 'You need to be logged in first to update a post.',
+        buttonTextPositive: 'Log In',
+        buttonTextNegative: 'No thanks',
+        onPositivePressed: () => navigateToLogin(context),
+        onNegativePressed: () => Navigator.of(context).pop(),
+      );
+    }
+  }
+
   _showUpdatePostDialog(BuildContext context, String authToken) {
     showDialog(
       context: context,
@@ -185,4 +216,14 @@ class PostCard extends StatelessWidget {
       },
     );
   }
+
+  _showDeletePostDialog(BuildContext context, String authToken) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return DeletePostDialog(authToken: authToken, post_id: item.id);
+        }
+    );
+  }
+
 }
