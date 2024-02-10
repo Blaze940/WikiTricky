@@ -19,7 +19,6 @@ class PostApiService {
 
   Future<Post> getNextPagePostRecords(int page) async {
     try {
-      //call get with param page to get next page
       final response = await _dio.get("$basePostUrl?page=$page");
       final post = response.data;
       return Post.fromJson(post);
@@ -40,20 +39,24 @@ class PostApiService {
 
   Future<void> updatePost(
       Map<String, dynamic> postUpdateRequest, String authToken) async {
+    final updateUrl = "$basePostUrl/${postUpdateRequest['post_id']}";
+    final dataToSend = {
+      'content': postUpdateRequest['content'],
+      if (postUpdateRequest.containsKey('base_64_image')) 'base_64_image': postUpdateRequest['base_64_image'],
+    };
     try {
       _dio.options.headers['Authorization'] = 'Bearer $authToken';
-      await _dio.put("$basePostUrl",
-          data: postUpdateRequest,
-          queryParameters: {'post_id': postUpdateRequest['postId']});
+      await _dio.patch(updateUrl, data: dataToSend);
     } on DioException {
       rethrow;
     }
   }
 
   Future<void> deletePost(int postId, String authToken) async {
+    final deleteUrl = "$basePostUrl/$postId";
     try {
       _dio.options.headers['Authorization'] = 'Bearer $authToken';
-      await _dio.delete("$basePostUrl", queryParameters: {'post_id': postId});
+      await _dio.delete(deleteUrl);
     } on DioException {
       rethrow;
     }

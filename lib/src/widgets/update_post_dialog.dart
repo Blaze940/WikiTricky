@@ -1,31 +1,46 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wiki_tricky/src/models/items/post_create_request.dart';
 import 'package:toastification/toastification.dart';
+import 'package:wiki_tricky/src/models/items/post_update_request.dart';
 import '../blocs/posts_bloc/post_bloc.dart';
 import '../services/image_service.dart';
 import '../services/toast_service.dart';
 
-class CreatePostDialog extends StatefulWidget {
+class UpdatePostDialog extends StatefulWidget {
   final String authToken;
+  final int post_id;
+  final String content;
 
-  const CreatePostDialog({Key? key, required this.authToken}) : super(key: key);
+  const UpdatePostDialog({
+    Key? key,
+    required this.authToken,
+    required this.post_id,
+    required this.content,
+  }) : super(key: key);
 
   @override
-  CreatePostDialogState createState() => CreatePostDialogState();
+  UpdatePostDialogState createState() => UpdatePostDialogState();
 }
 
-class CreatePostDialogState extends State<CreatePostDialog> {
+class UpdatePostDialogState extends State<UpdatePostDialog> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _contentController = TextEditingController();
   File? _image;
   String? _imageBase64;
   String? _imageBase64Vanilla ;
-  bool _isPosting = false;
+  bool _isPostingUpdate = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _contentController.text = widget.content;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,24 +64,27 @@ class CreatePostDialogState extends State<CreatePostDialog> {
                 children: <Widget>[
                   const Icon(Icons.edit, color: Color(0xFF8B0000), size: 48),
                   const SizedBox(height: 16),
-                  const Text('Create a Post',
+                  const Text('Update Post',
                       style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                      TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _contentController,
                     maxLines: 3,
                     decoration: InputDecoration(
-                      hintText: "What's on your mind?",
-                      labelText: 'Your Post',
+                      hintText: "Your changed your mind?",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       fillColor: Colors.grey[200],
                       filled: true,
                     ),
-                    validator: (value) =>
-                        value!.isEmpty ? 'Please enter some text' : null,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
                   OutlinedButton.icon(
@@ -98,58 +116,60 @@ class CreatePostDialogState extends State<CreatePostDialog> {
             ),
             child: const Text('Cancel'),
           ),
-          _isPosting
+          _isPostingUpdate
               ? Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 15),
-                  width: 24,
-                  height: 24,
-                  child: const CircularProgressIndicator(strokeWidth: 2.0),
-                )
+            margin: const EdgeInsets.symmetric(horizontal: 15),
+            width: 24,
+            height: 24,
+            child: const CircularProgressIndicator(strokeWidth: 2.0),
+          )
               : ElevatedButton(
-                  onPressed: _onCreatePostPressed,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF8B0000),
-                  ),
-                  child: const Text('Post'),
-                ),
+            onPressed: _onUpdatePostPressed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF8B0000),
+            ),
+            child: const Text('Update'),
+          ),
         ],
       ),
     );
   }
 
-  void _postBlocListener(BuildContext context, PostState state) {
-    if (state.status == PostStatus.loadingCreatePost) {
-      setState(() => _isPosting = true);
-    } else if (state.status == PostStatus.successCreatePost) {
-      showCustomToast(context,
-          type: ToastificationType.success,
-          title: "Success",
-          description: "Post created successfully!");
-      setState(() => _isPosting = false);
-      Navigator.of(context).pop();
-    } else if (state.status == PostStatus.error) {
-      showCustomToast(context,
-          type: ToastificationType.error,
-          title: "Error",
-          description: state.error?.toString() ?? "Error creating post");
-      setState(() => _isPosting = false);
-    }
-  }
-
-  void _onCreatePostPressed() {
+  void _onUpdatePostPressed() {
     if (_formKey.currentState!.validate()) {
       final postBloc = BlocProvider.of<PostBloc>(context);
-      final postCreateRequest = PostCreateRequest(
+      final postCreateRequest = PostUpdateRequest(
+        post_id: widget.post_id,
         content: _contentController.text,
         base_64_image: _imageBase64,
       );
-      postBloc.add(CreatePost(postCreateRequest, widget.authToken));
+      postBloc.add(UpdatePost(postCreateRequest, widget.authToken));
+    }
+  }
+
+  void _postBlocListener(BuildContext context, PostState state) {
+    if (state.status == PostStatus.loadingUpdatePost) {
+      setState(() {
+        _isPostingUpdate = true;
+      });
+    } else if (state.status == PostStatus.successUpdatePost) {
+      showCustomToast(context, type: ToastificationType.success,
+          title: 'Post updated',
+          description: 'Your post has been updated successfully.');
+      Navigator.of(context).pop();
+    } else if (state.status == PostStatus.error) {
+      showCustomToast(context, type: ToastificationType.error,
+          title: "Error",
+          description: state.error?.toString() ?? "Error while updating post");
+      setState(() {
+        _isPostingUpdate = false;
+      });
     }
   }
 
   Future<void> _pickImage() async {
     Map base64Image =
-        await ImageService.pickImageAndEncodeBase64(ImageSource.gallery);
+    await ImageService.pickImageAndEncodeBase64(ImageSource.gallery);
     if(base64Image['base64ImageVanilla'] != null) {
       setState(() {
         _imageBase64 = base64Image['base64Image'];

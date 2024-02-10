@@ -2,8 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:toastification/toastification.dart';
+import 'package:wiki_tricky/src/widgets/update_post_dialog.dart';
 import '../blocs/auth_bloc/auth_bloc.dart';
 import '../models/items/item.dart';
+import '../services/dialog_service.dart';
+import '../services/router_service.dart';
+import '../services/secure_storage_service.dart';
+import '../services/toast_service.dart';
 
 class PostCard extends StatelessWidget {
   final Item item;
@@ -27,7 +33,7 @@ class PostCard extends StatelessWidget {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 1,
             blurRadius: 5,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -53,7 +59,7 @@ class PostCard extends StatelessWidget {
                     children: [
                       Text(
                         item.author.name,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -71,7 +77,7 @@ class PostCard extends StatelessWidget {
                           ),
                           if (canEdit)
                             IconButton(
-                              icon: Icon(Icons.delete, color: Color(0xFF8B0000), size: 20), // Couleur rouge pour l'icône
+                              icon: const Icon(Icons.delete, color: Color(0xFF8B0000), size: 20),
                               onPressed: () {
                                 // Logique pour supprimer le post
                               },
@@ -83,7 +89,7 @@ class PostCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     item.content,
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -107,20 +113,18 @@ class PostCard extends StatelessWidget {
                         children: [
                           if (canEdit)
                             ElevatedButton.icon(
-                              icon: Icon(Icons.edit, size: 16),
-                              label: Text('Edit', style: TextStyle(fontSize: 12)),
-                              onPressed: () {
-                                // Logique pour modifier le post
-                              }
+                              icon: const Icon(Icons.edit, size: 16, color: Color(0xFF8B0000)),
+                              label: const Text('Edit', style: TextStyle(fontSize: 12)),
+                              onPressed: () => _onUpdatePostPressed(context)
                               ,style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white, backgroundColor: Theme.of(context).primaryColor,
+                                foregroundColor: const Color(0xFF8B0000), backgroundColor: Colors.white,
                               )
                             ),
 
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           ElevatedButton.icon(
-                            icon: Icon(Icons.visibility, size: 16),
-                            label: Text('Details', style: TextStyle(fontSize: 12)),
+                            icon: const Icon(Icons.visibility, size: 16),
+                            label: const Text('Details', style: TextStyle(fontSize: 12)),
                             onPressed: () {
                               // Logique pour naviguer vers la page de détails
                             },
@@ -138,6 +142,47 @@ class PostCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  _onUpdatePostPressed(BuildContext context) async {
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    if (authBloc.state.status == AuthStatus.success) {
+      try {
+        final authToken = await SecureStorageService.instance.getAuthToken();
+        authToken != null
+            ? _showUpdatePostDialog(context, authToken)
+            : showCustomDialog(
+                context: context,
+                title: 'Session Expired',
+                message: 'Your session has expired. Please log in again.',
+                buttonTextPositive: 'Go',
+                buttonTextNegative: 'Later',
+                onPositivePressed: () => navigateToLogin(context),
+                onNegativePressed: () => Navigator.of(context).pop(),
+              );
+      } catch (e) {
+        showCustomToast(context, type: ToastificationType.error, title: 'Session error', description: 'An error occurred. Please try again later.');
+      }
+    } else {
+      showCustomDialog(
+        context: context,
+        title: 'No Session Found',
+        message: 'You need to be logged in first to update a post.',
+        buttonTextPositive: 'Log In',
+        buttonTextNegative: 'No thanks',
+        onPositivePressed: () => navigateToLogin(context),
+        onNegativePressed: () => Navigator.of(context).pop(),
+      );
+    }
+  }
+
+  _showUpdatePostDialog(BuildContext context, String authToken) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return UpdatePostDialog(authToken: authToken, post_id: item.id, content: item.content);
+      },
     );
   }
 }

@@ -66,7 +66,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       LogoutRequested event, Emitter<AuthState> emit) async {
     try {
       await secureStorageService.deleteAuthToken();
-      UserPreferences.removeUserData();
       emit(state.copyWith(status: AuthStatus.initial, user: null));
     } catch (e) {
       emit(state.copyWith(

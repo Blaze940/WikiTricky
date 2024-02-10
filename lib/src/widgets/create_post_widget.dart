@@ -15,7 +15,7 @@ class CreatePostWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () => _onPressed(context),
-      backgroundColor: Color(0xFF8B0000),
+      backgroundColor: const Color(0xFF8B0000),
       child: const Icon(Icons.edit_note, color: Colors.white),
     );
   }
