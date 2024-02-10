@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toastification/toastification.dart';
 import 'package:wiki_tricky/src/services/toast_service.dart';
 
-import '../blocs/posts_bloc/post_bloc.dart';
+import '../../blocs/posts_bloc/post_bloc.dart';
 
 class DeletePostDialog extends StatefulWidget {
   final String authToken;

@@ -6,7 +6,7 @@ import 'package:wiki_tricky/src/services/toast_service.dart';
 import '../blocs/auth_bloc/auth_bloc.dart';
 import '../services/dialog_service.dart';
 import '../services/router_service.dart';
-import 'create_post_dialog.dart';
+import 'use_cases/create_post_dialog.dart';
 
 class CreatePostWidget extends StatelessWidget {
   const CreatePostWidget({Key? key}) : super(key: key);

@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:toastification/toastification.dart';
-import 'package:wiki_tricky/src/widgets/update_post_dialog.dart';
+import 'package:wiki_tricky/src/widgets/use_cases/update_post_dialog.dart';
 import '../blocs/auth_bloc/auth_bloc.dart';
 import '../models/items/item.dart';
 import '../services/dialog_service.dart';
 import '../services/router_service.dart';
 import '../services/secure_storage_service.dart';
 import '../services/toast_service.dart';
-import 'delete_post_dialog.dart';
+import 'use_cases/delete_post_dialog.dart';
 
 class PostCard extends StatelessWidget {
   final Item item;
