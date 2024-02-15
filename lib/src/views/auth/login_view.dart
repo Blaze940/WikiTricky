@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toastification/toastification.dart';
 import 'package:wiki_tricky/src/helpers/validators.dart';
 import 'package:wiki_tricky/src/services/router_service.dart';
-import 'package:wiki_tricky/src/views/auth/signup_view.dart';
 
 import '../../blocs/auth_bloc/auth_bloc.dart';
 import '../../services/toast_service.dart';

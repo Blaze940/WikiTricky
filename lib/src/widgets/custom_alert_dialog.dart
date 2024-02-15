@@ -23,13 +23,13 @@ class CustomAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> columnChildren = [
-      if (iconData != null) Icon(iconData, color: Color(0xFF8B0000), size: 48),
-      SizedBox(height: 16),
-      Text(title, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-      SizedBox(height: 16),
+      if (iconData != null) Icon(iconData, color: const Color(0xFF8B0000), size: 48),
+      const SizedBox(height: 16),
+      Text(title, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+      const SizedBox(height: 16),
       Text(message,
-          textAlign: TextAlign.center, style: TextStyle(fontSize: 16)),
-      SizedBox(height: 24),
+          textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
+      const SizedBox(height: 24),
     ];
 
     columnChildren.add(Row(
@@ -47,7 +47,7 @@ class CustomAlertDialog extends StatelessWidget {
           ElevatedButton(
             onPressed: onPositivePressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF8B0000),
+              backgroundColor: const Color(0xFF8B0000),
             ),
             child: Text(buttonTextPositive),
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wiki_tricky/src/blocs/posts_bloc/post_bloc.dart';
-import 'package:wiki_tricky/src/widgets/post_card.dart';
+import 'package:wiki_tricky/src/widgets/post_widget.dart';
 
 class CommunityPostListView extends StatefulWidget {
   const CommunityPostListView({Key? key}) : super(key: key);
@@ -64,7 +64,7 @@ class _CommunityPostListViewState extends State<CommunityPostListView> {
               itemCount: items.length + (state.currentPost?.nextPage != null ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index < items.length) {
-                  return PostCard(item: items[index]);
+                  return PostWidget(item: items[index]);
                 } else {
                   return state.currentPost?.nextPage != null
                       ? const Center(child: CircularProgressIndicator())

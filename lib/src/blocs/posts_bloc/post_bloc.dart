@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
+import 'package:wiki_tricky/src/models/items/item_details.dart';
 import 'package:wiki_tricky/src/models/items/post_update_request.dart';
 import 'package:wiki_tricky/src/services/api_call/post_api_service.dart';
 import 'package:wiki_tricky/src/services/secure_storage_service.dart';
@@ -21,6 +22,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   PostBloc(this.postApiService, this.secureStorageService) : super(const PostState()) {
     on<GetItems>(_onGetItems);
+    on<GetDetailsPost>(onGetDetailsPost);
     on<GetNextItems>(_onGetNextItems);
     on<CreatePost>(_onCreatePost);
     on<UpdatePost>(_onUpdatePost);
@@ -32,6 +34,24 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     try {
       final firstPost = await postApiService.getFirstPostRecords();
       emit(state.copyWith(status:PostStatus.successGetItems, currentPost: firstPost, items: firstPost.items));
+    } on DioException catch (e) {
+      emit(state.copyWith(
+          status: PostStatus.error,
+          error: ApiError(
+              message: e.response?.data['message'] ??
+                  "Something went wrong during fetching. Try later ...")));
+    } on Exception {
+      emit(state.copyWith(
+          status: PostStatus.error,
+          error: ApiError(message: "Something went wrong during fetching. Try later ...")));
+    }
+  }
+
+  Future<void> onGetDetailsPost(GetDetailsPost event, Emitter<PostState> emit) async {
+    emit(state.copyWith(status: PostStatus.loadingGetDetailsPost));
+    try {
+      final postDetails = await postApiService.getPostDetails(event.post_id);
+      emit(state.copyWith(status: PostStatus.successLoadingGetDetailsPost, currentPostDetails: postDetails));
     } on DioException catch (e) {
       emit(state.copyWith(
           status: PostStatus.error,

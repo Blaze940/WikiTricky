@@ -19,7 +19,7 @@ class SecureStorageService {
     try {
       return await _storage.read(key: 'authToken');
     } catch (e) {
-      throw Exception('Failed to get auth token - ' + e.toString());
+      throw Exception('Failed to get auth token - $e');
     }
   }
 
@@ -27,7 +27,7 @@ class SecureStorageService {
     try {
       await _storage.delete(key: 'authToken');
     } catch (e) {
-      throw Exception('Failed to delete auth token - ' + e.toString());
+      throw Exception('Failed to delete auth token - $e');
     }
   }
 }

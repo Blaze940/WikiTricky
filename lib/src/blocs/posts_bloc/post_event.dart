@@ -11,6 +11,12 @@ class GetNextItems extends PostEvent {
   GetNextItems(this.page);
 }
 
+class GetDetailsPost extends PostEvent {
+  final int post_id;
+
+  GetDetailsPost(this.post_id);
+}
+
 class CreatePost extends PostEvent {
   final PostCreateRequest postCreateRequest;
   final String authToken;
@@ -31,5 +37,7 @@ class DeletePost extends PostEvent {
 
   DeletePost(this.post_id, this.authToken);
 }
+
+
 
 

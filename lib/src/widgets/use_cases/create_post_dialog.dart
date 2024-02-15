@@ -83,7 +83,7 @@ class CreatePostDialogState extends State<CreatePostDialog> {
                       height: 200,
                       width: double.infinity,
                       alignment: Alignment.center,
-                      child: kIsWeb ? Image.memory(base64Decode(_imageBase64Vanilla!)) : (_image != null ? Image.file(_image!) : SizedBox()),
+                      child: kIsWeb ? Image.memory(base64Decode(_imageBase64Vanilla!)) : (_image != null ? Image.file(_image!) : const SizedBox()),
                     ),
                 ],
               ),

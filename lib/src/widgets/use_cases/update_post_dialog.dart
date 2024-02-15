@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:wiki_tricky/src/models/items/post_create_request.dart';
 import 'package:toastification/toastification.dart';
 import 'package:wiki_tricky/src/models/items/post_update_request.dart';
 import '../../blocs/posts_bloc/post_bloc.dart';
@@ -100,7 +98,7 @@ class UpdatePostDialogState extends State<UpdatePostDialog> {
                       height: 200,
                       width: double.infinity,
                       alignment: Alignment.center,
-                      child: kIsWeb ? Image.memory(base64Decode(_imageBase64Vanilla!)) : (_image != null ? Image.file(_image!) : SizedBox()),
+                      child: kIsWeb ? Image.memory(base64Decode(_imageBase64Vanilla!)) : (_image != null ? Image.file(_image!) : const SizedBox()),
                     ),
                 ],
               ),

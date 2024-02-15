@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:wiki_tricky/src/models/items/item_details.dart';
 
 import '../../models/posts/post.dart';
 
@@ -9,7 +10,7 @@ class PostApiService {
 
   Future<Post> getFirstPostRecords() async {
     try {
-      final response = await _dio.get("$basePostUrl");
+      final response = await _dio.get(basePostUrl);
       final post = response.data;
       return Post.fromJson(post);
     } on DioException {
@@ -27,11 +28,21 @@ class PostApiService {
     }
   }
 
+  Future<ItemDetails> getPostDetails(int post_id) async {
+    try {
+      final response = await _dio.get("$basePostUrl/$post_id");
+      final postDetails = response.data;
+      return ItemDetails.fromJson(postDetails);
+    } on DioException {
+      rethrow;
+    }
+  }
+
   Future<void> createPost(
       Map<String, dynamic> postCreateRequest, String authToken) async {
     try {
       _dio.options.headers['Authorization'] = 'Bearer $authToken';
-      await _dio.post("$basePostUrl", data: postCreateRequest);
+      await _dio.post(basePostUrl, data: postCreateRequest);
     } on DioException {
       rethrow;
     }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:toastification/toastification.dart';
 import 'package:wiki_tricky/src/blocs/auth_bloc/auth_bloc.dart';
 import 'package:wiki_tricky/src/services/toast_service.dart';
@@ -24,7 +23,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             color: Colors.black.withOpacity(0.5),
             spreadRadius: 0,
             blurRadius: 4,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),

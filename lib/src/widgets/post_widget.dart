@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:toastification/toastification.dart';
+import 'package:wiki_tricky/src/views/post/post_detail_view.dart';
 import 'package:wiki_tricky/src/widgets/use_cases/update_post_dialog.dart';
 import '../blocs/auth_bloc/auth_bloc.dart';
 import '../models/items/item.dart';
@@ -12,10 +12,10 @@ import '../services/secure_storage_service.dart';
 import '../services/toast_service.dart';
 import 'use_cases/delete_post_dialog.dart';
 
-class PostCard extends StatelessWidget {
+class PostWidget extends StatelessWidget {
   final Item item;
 
-  const PostCard({Key? key, required this.item}) : super(key: key);
+  const PostWidget({Key? key, required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -124,11 +124,9 @@ class PostCard extends StatelessWidget {
                           ElevatedButton.icon(
                             icon: const Icon(Icons.visibility, size: 16),
                             label: const Text('Details', style: TextStyle(fontSize: 12)),
-                            onPressed: () {
-                              // Logique pour naviguer vers la page de détails
-                            },
+                            onPressed: () => _onShowPostDetailsPressed(context, item.id),
                             style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white, backgroundColor: Color(0xFF8B0000),
+                              foregroundColor: Colors.white, backgroundColor: const Color(0xFF8B0000),
                             ),
                           ),
                         ],
@@ -206,6 +204,12 @@ class PostCard extends StatelessWidget {
         onNegativePressed: () => Navigator.of(context).pop(),
       );
     }
+  }
+
+  _onShowPostDetailsPressed(BuildContext context, int post_id) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => PostDetailView(id: post_id))
+    );
   }
 
   _showUpdatePostDialog(BuildContext context, String authToken) {

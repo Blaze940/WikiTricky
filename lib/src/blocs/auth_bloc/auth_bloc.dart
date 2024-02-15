@@ -4,7 +4,6 @@ import 'package:meta/meta.dart';
 import 'package:wiki_tricky/src/models/api_error.dart';
 import 'package:wiki_tricky/src/services/secure_storage_service.dart';
 import 'package:wiki_tricky/src/services/api_call/auth_api_service.dart';
-import 'package:wiki_tricky/src/services/user_preferences.dart';
 
 import '../../models/users/user.dart';
 
