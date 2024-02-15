@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../blocs/auth_bloc/auth_bloc.dart';
 import '../models/comments/comment.dart';
 
 class CommentWidget extends StatelessWidget {
@@ -10,6 +12,11 @@ class CommentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    final isLoggedIn = authBloc.state.status == AuthStatus.success;
+    final currentUser = authBloc.state.user;
+    final canEdit = isLoggedIn && currentUser?.id == comment.author.id;
+
     return Card(
       elevation: 2,
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -24,16 +31,18 @@ class CommentWidget extends StatelessWidget {
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    comment.content,
-                    style: TextStyle(fontWeight: FontWeight.normal),
+                    comment.author.name,
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
+                if(canEdit)
                 IconButton(
                   icon: Icon(Icons.edit, color: Colors.black, size: 20),
                   onPressed: () {
                     // Logic to edit the comment
                   },
                 ),
+                if(canEdit)
                 IconButton(
                   icon: Icon(Icons.delete, color: Color(0xFF8B0000), size: 20),
                   onPressed: () {
@@ -45,8 +54,8 @@ class CommentWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 48.0),
               child: Text(
-                comment.author.name,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                comment.content,
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
               ),
             ),
             Padding(

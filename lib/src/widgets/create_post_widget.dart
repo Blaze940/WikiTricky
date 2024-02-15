@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toastification/toastification.dart';
 import 'package:wiki_tricky/src/services/secure_storage_service.dart';
 import 'package:wiki_tricky/src/services/toast_service.dart';
+import 'package:wiki_tricky/src/widgets/use_cases_dialog/create_post_dialog.dart';
 import '../blocs/auth_bloc/auth_bloc.dart';
 import '../services/dialog_service.dart';
 import '../services/router_service.dart';
-import 'use_cases/create_post_dialog.dart';
+
 
 class CreatePostWidget extends StatelessWidget {
   const CreatePostWidget({Key? key}) : super(key: key);

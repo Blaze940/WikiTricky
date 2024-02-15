@@ -6,7 +6,8 @@ class CustomAppBarSimple extends StatelessWidget implements PreferredSizeWidget 
 
   const CustomAppBarSimple({
     Key? key,
-    this.titleText = 'Detail',
+    //if titleText is null, set default value to 'WikiTwiki'
+    this.titleText = 'WikiTwiki',
   }) : super(key: key);
 
   @override
