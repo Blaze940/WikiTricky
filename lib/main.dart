@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wiki_tricky/src/blocs/auth_bloc/auth_bloc.dart';
+import 'package:wiki_tricky/src/blocs/comment_bloc/comment_bloc.dart';
 import 'package:wiki_tricky/src/blocs/posts_bloc/post_bloc.dart';
 import 'package:wiki_tricky/src/services/api_call/auth_api_service.dart';
+import 'package:wiki_tricky/src/services/api_call/comment_api_service.dart';
 import 'package:wiki_tricky/src/services/api_call/post_api_service.dart';
 import 'package:wiki_tricky/src/services/secure_storage_service.dart';
 import 'package:wiki_tricky/src/views/auth/login_view.dart';
@@ -47,6 +49,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<PostBloc>(
             create: (context) => PostBloc(PostApiService(),SecureStorageService.instance)
+        )
+        ,BlocProvider<CommentBloc>(
+            create: (context) => CommentBloc(CommentApiService(),SecureStorageService.instance)
         )
       ],
       child: MaterialApp.router(

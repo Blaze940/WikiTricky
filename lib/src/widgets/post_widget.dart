@@ -103,10 +103,9 @@ class PostWidget extends StatelessWidget {
                               color: Theme.of(context).primaryColor, size: 20),
                           const SizedBox(width: 4),
                           TextButton(
-                            onPressed: () =>
-                            item.commentsCount > 0 ?
-                                _onShowPostDetailsPressed(context, item.id)
-                            : null,
+                            onPressed: () => item.commentsCount > 0
+                                ? _onShowPostDetailsPressed(context, item.id)
+                                : null,
                             style: TextButton.styleFrom(
                               foregroundColor: Theme.of(context).primaryColor,
                               padding: EdgeInsets.zero,

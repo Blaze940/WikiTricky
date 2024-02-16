@@ -7,9 +7,6 @@ class ApiError implements Exception{
 
   @override
   String toString() {
-    //if (payload!.isNotEmpty) {
-      //return '$message - $payload';
-    //}
     return message!;
   }
 }

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:toastification/toastification.dart';
+import 'package:wiki_tricky/src/widgets/use_cases_dialog/update_comment_dialog.dart';
 
 import '../blocs/auth_bloc/auth_bloc.dart';
 import '../models/comments/comment.dart';
+import '../services/dialog_service.dart';
+import '../services/router_service.dart';
+import '../services/secure_storage_service.dart';
+import '../services/toast_service.dart';
 
 class CommentWidget extends StatelessWidget {
   final Comment comment;
@@ -35,20 +41,19 @@ class CommentWidget extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-                if(canEdit)
-                IconButton(
-                  icon: Icon(Icons.edit, color: Colors.black, size: 20),
-                  onPressed: () {
-                    // Logic to edit the comment
-                  },
-                ),
-                if(canEdit)
-                IconButton(
-                  icon: Icon(Icons.delete, color: Color(0xFF8B0000), size: 20),
-                  onPressed: () {
-                    // Logic to delete the comment
-                  },
-                ),
+                if (canEdit)
+                  IconButton(
+                    icon: Icon(Icons.edit, color: Colors.black, size: 20),
+                    onPressed: () => _onEditCommentPressed(context),
+                  ),
+                if (canEdit)
+                  IconButton(
+                    icon:
+                        Icon(Icons.delete, color: Color(0xFF8B0000), size: 20),
+                    onPressed: () {
+                      // Logic to delete the comment
+                    },
+                  ),
               ],
             ),
             Padding(
@@ -69,5 +74,52 @@ class CommentWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _onEditCommentPressed(BuildContext context) async {
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    if (authBloc.state.status == AuthStatus.success) {
+      try {
+        final authToken = await SecureStorageService.instance.getAuthToken();
+        authToken != null
+            ? _showUpdateCommentDialog(context, authToken)
+            : showCustomDialog(
+                context: context,
+                title: 'Session Expired',
+                message: 'Your session has expired. Please log in again.',
+                buttonTextPositive: 'Go',
+                buttonTextNegative: 'Later',
+                onPositivePressed: () => navigateToLogin(context),
+                onNegativePressed: () => Navigator.of(context).pop(),
+              );
+      } catch (e) {
+        showCustomToast(context,
+            type: ToastificationType.error,
+            title: 'Session error',
+            description: 'An error occurred. Please try again later.');
+      }
+    } else {
+      showCustomDialog(
+        context: context,
+        title: 'No Session Found',
+        message: 'You need to be logged in first to update a comment.',
+        buttonTextPositive: 'Log In',
+        buttonTextNegative: 'No thanks',
+        onPositivePressed: () => navigateToLogin(context),
+        onNegativePressed: () => Navigator.of(context).pop(),
+      );
+    }
+  }
+
+  void _showUpdateCommentDialog(BuildContext context, String authToken) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return UpdateCommentDialog(
+            comment_id: comment.id,
+            authToken: authToken,
+            content: comment.content,
+          );
+        });
   }
 }

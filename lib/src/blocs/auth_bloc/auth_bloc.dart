@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:wiki_tricky/src/models/api_error.dart';
+import 'package:wiki_tricky/src/models/error/api_error.dart';
 import 'package:wiki_tricky/src/services/secure_storage_service.dart';
 import 'package:wiki_tricky/src/services/api_call/auth_api_service.dart';
 

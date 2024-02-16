@@ -8,7 +8,7 @@ import 'package:wiki_tricky/src/models/items/post_update_request.dart';
 import 'package:wiki_tricky/src/services/api_call/post_api_service.dart';
 import 'package:wiki_tricky/src/services/secure_storage_service.dart';
 
-import '../../models/api_error.dart';
+import '../../models/error/api_error.dart';
 import '../../models/items/item.dart';
 import '../../models/items/post_create_request.dart';
 import '../../models/posts/post.dart';
@@ -76,11 +76,11 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         emit(state.copyWith(
             status: PostStatus.error,
             error: ApiError(
-                message: e.response?.data['message'] ?? "Something went wrong during fetching. Try later ...")));
+                message: e.response?.data['message'] ?? "Something went wrong during fetch. Try later ...")));
       } on Exception {
         emit(state.copyWith(
             status: PostStatus.error,
-            error: ApiError(message: "Something went wrong during fetching. Try later ...")));
+            error: ApiError(message: "Something went wrong during fetch. Try later ...")));
       }
     }
   }
@@ -95,11 +95,11 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       emit(state.copyWith(
           status: PostStatus.error,
           error: ApiError(
-              message: e.response?.data['message'] ?? "Something went wrong during creating. Try later ...")));
+              message: e.response?.data['message'] ?? "Something went wrong during creation. Try later ...")));
     } on Exception {
       emit(state.copyWith(
           status: PostStatus.error,
-          error: ApiError(message: "Something went wrong during creating. Try later ...")));
+          error: ApiError(message: "Something went wrong during creation. Try later ...")));
     }
   }
 
@@ -113,11 +113,11 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       emit(state.copyWith(
           status: PostStatus.error,
           error: ApiError(
-              message: e.response?.data['message'] ?? "Something went wrong during updating. Try later ...")));
+              message: e.response?.data['message'] ?? "Something went wrong during update. Try later ...")));
     } on Exception {
       emit(state.copyWith(
           status: PostStatus.error,
-          error: ApiError(message: "Something went wrong during updating. Try later ...")));
+          error: ApiError(message: "Something went wrong during update. Try later ...")));
     }
   }
 
@@ -130,11 +130,11 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       emit(state.copyWith(
           status: PostStatus.error,
           error: ApiError(
-              message: e.response?.data['message'] ?? "Something went wrong during deleting. Try later ...")));
+              message: e.response?.data['message'] ?? "Something went wrong during deletion. Try later ...")));
     } on Exception {
       emit(state.copyWith(
           status: PostStatus.error,
-          error: ApiError(message: "Something went wrong during deleting. Try later ...")));
+          error: ApiError(message: "Something went wrong during deletion. Try later ...")));
     }
   }
 

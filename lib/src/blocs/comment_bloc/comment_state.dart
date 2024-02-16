@@ -1,6 +1,32 @@
 part of 'comment_bloc.dart';
 
-@immutable
-abstract class CommentState {}
+enum CommentStatus {
+  initial,
+  loadingCreateComment,
+  loadingUpdateComment,
+  loadingDeleteComment,
+  successCreateComment,
+  successUpdateComment,
+  successDeleteComment,
+  error,
+}
 
-class CommentInitial extends CommentState {}
+class CommentState {
+  final CommentStatus status;
+  final Exception? error;
+
+  const CommentState({
+    this.status = CommentStatus.initial,
+
+    this.error,
+  });
+
+  CommentState copyWith({
+    CommentStatus? status,
+    Exception? error,
+  }) {
+    return CommentState(
+      status: status ?? this.status,
+    );
+  }
+}

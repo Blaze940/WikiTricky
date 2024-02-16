@@ -135,12 +135,12 @@ class UpdatePostDialogState extends State<UpdatePostDialog> {
   void _onUpdatePostPressed() {
     if (_formKey.currentState!.validate()) {
       final postBloc = BlocProvider.of<PostBloc>(context);
-      final postCreateRequest = PostUpdateRequest(
+      final postUpdateeRequest = PostUpdateRequest(
         post_id: widget.post_id,
         content: _contentController.text,
         base_64_image: _imageBase64,
       );
-      postBloc.add(UpdatePost(postCreateRequest, widget.authToken));
+      postBloc.add(UpdatePost(postUpdateeRequest, widget.authToken));
     }
   }
 
