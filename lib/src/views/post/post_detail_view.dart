@@ -29,7 +29,7 @@ class _PostDetailViewState extends State<PostDetailView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarSimple(titleText: "Post details"),
+      appBar: CustomAppBarSimple(titleText: "Details"),
       body: BlocBuilder<PostBloc, PostState>(
         builder: (context, state) {
           if (state.status == PostStatus.loadingGetDetailsPost) {

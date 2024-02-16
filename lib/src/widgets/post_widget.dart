@@ -13,7 +13,6 @@ import '../services/router_service.dart';
 import '../services/secure_storage_service.dart';
 import '../services/toast_service.dart';
 
-
 class PostWidget extends StatelessWidget {
   final Item item;
 
@@ -71,7 +70,8 @@ class PostWidget extends StatelessWidget {
                         children: [
                           Text(
                             DateFormat('dd MMM yyyy, HH:mm').format(
-                              DateTime.fromMillisecondsSinceEpoch(item.createdAt),
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  item.createdAt),
                             ),
                             style: TextStyle(
                               color: Colors.grey[600],
@@ -80,7 +80,8 @@ class PostWidget extends StatelessWidget {
                           ),
                           if (canEdit)
                             IconButton(
-                              icon: const Icon(Icons.delete, color: Color(0xFF8B0000), size: 20),
+                              icon: const Icon(Icons.delete,
+                                  color: Color(0xFF8B0000), size: 20),
                               onPressed: () => _onDeletePostPressed(context),
                             ),
                         ],
@@ -98,14 +99,25 @@ class PostWidget extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.comment, color: Theme.of(context).primaryColor, size: 20),
+                          Icon(Icons.comment,
+                              color: Theme.of(context).primaryColor, size: 20),
                           const SizedBox(width: 4),
-                          Text(
-                            '${item.commentsCount} Comments',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                          TextButton(
+                            onPressed: () =>
+                            item.commentsCount > 0 ?
+                                _onShowPostDetailsPressed(context, item.id)
+                            : null,
+                            style: TextButton.styleFrom(
+                              foregroundColor: Theme.of(context).primaryColor,
+                              padding: EdgeInsets.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: Text(
+                              '${item.commentsCount} Comments',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
@@ -114,21 +126,25 @@ class PostWidget extends StatelessWidget {
                         children: [
                           if (canEdit)
                             ElevatedButton.icon(
-                              icon: const Icon(Icons.edit, size: 16, color: Color(0xFF8B0000)),
-                              label: const Text('Edit', style: TextStyle(fontSize: 12)),
-                              onPressed: () => _onUpdatePostPressed(context)
-                              ,style: ElevatedButton.styleFrom(
-                                foregroundColor: const Color(0xFF8B0000), backgroundColor: Colors.white,
-                              )
-                            ),
-
+                                icon: const Icon(Icons.edit,
+                                    size: 16, color: Color(0xFF8B0000)),
+                                label: const Text('Edit',
+                                    style: TextStyle(fontSize: 12)),
+                                onPressed: () => _onUpdatePostPressed(context),
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: const Color(0xFF8B0000),
+                                  backgroundColor: Colors.white,
+                                )),
                           const SizedBox(width: 8),
                           ElevatedButton.icon(
                             icon: const Icon(Icons.visibility, size: 16),
-                            label: const Text('Details', style: TextStyle(fontSize: 12)),
-                            onPressed: () => _onShowPostDetailsPressed(context, item.id),
+                            label: const Text('Details',
+                                style: TextStyle(fontSize: 12)),
+                            onPressed: () =>
+                                _onShowPostDetailsPressed(context, item.id),
                             style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white, backgroundColor: const Color(0xFF8B0000),
+                              foregroundColor: Colors.white,
+                              backgroundColor: const Color(0xFF8B0000),
                             ),
                           ),
                         ],
@@ -161,7 +177,10 @@ class PostWidget extends StatelessWidget {
                 onNegativePressed: () => Navigator.of(context).pop(),
               );
       } catch (e) {
-        showCustomToast(context, type: ToastificationType.error, title: 'Session error', description: 'An error occurred. Please try again later.');
+        showCustomToast(context,
+            type: ToastificationType.error,
+            title: 'Session error',
+            description: 'An error occurred. Please try again later.');
       }
     } else {
       showCustomDialog(
@@ -184,16 +203,19 @@ class PostWidget extends StatelessWidget {
         authToken != null
             ? _showDeletePostDialog(context, authToken)
             : showCustomDialog(
-          context: context,
-          title: 'Session Expired',
-          message: 'Your session has expired. Please log in again.',
-          buttonTextPositive: 'Go',
-          buttonTextNegative: 'Later',
-          onPositivePressed: () => navigateToLogin(context),
-          onNegativePressed: () => Navigator.of(context).pop(),
-        );
+                context: context,
+                title: 'Session Expired',
+                message: 'Your session has expired. Please log in again.',
+                buttonTextPositive: 'Go',
+                buttonTextNegative: 'Later',
+                onPositivePressed: () => navigateToLogin(context),
+                onNegativePressed: () => Navigator.of(context).pop(),
+              );
       } catch (e) {
-        showCustomToast(context, type: ToastificationType.error, title: 'Session error', description: 'An error occurred. Please try again later.');
+        showCustomToast(context,
+            type: ToastificationType.error,
+            title: 'Session error',
+            description: 'An error occurred. Please try again later.');
       }
     } else {
       showCustomDialog(
@@ -209,16 +231,16 @@ class PostWidget extends StatelessWidget {
   }
 
   _onShowPostDetailsPressed(BuildContext context, int post_id) {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => PostDetailView(id: post_id))
-    );
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => PostDetailView(id: post_id)));
   }
 
   _showUpdatePostDialog(BuildContext context, String authToken) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return UpdatePostDialog(authToken: authToken, post_id: item.id, content: item.content);
+        return UpdatePostDialog(
+            authToken: authToken, post_id: item.id, content: item.content);
       },
     );
   }
@@ -228,8 +250,6 @@ class PostWidget extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return DeletePostDialog(authToken: authToken, post_id: item.id);
-        }
-    );
+        });
   }
-
 }

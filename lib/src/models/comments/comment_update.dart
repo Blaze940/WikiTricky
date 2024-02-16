@@ -1,16 +1,17 @@
-class CommentPost {
-  final int post_id;
+class CommentUpdate {
+  final String comment_id;
   final String content;
 
-  CommentPost({
-    required this.post_id,
+  CommentUpdate({
+    required this.comment_id,
     required this.content,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'post_id': post_id,
+      'comment_id': comment_id,
       'content': content,
     };
   }
+
 }
