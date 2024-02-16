@@ -22,8 +22,10 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   PostBloc(this.postApiService, this.secureStorageService) : super(const PostState()) {
     on<GetItems>(_onGetItems);
-    on<GetDetailsPost>(onGetDetailsPost);
+    on<GetItemsByUser>(_onGetItemsByUser);
+    on<GetNextItemsByUser>(_onGetNextItemsByUser);
     on<GetNextItems>(_onGetNextItems);
+    on<GetDetailsPost>(onGetDetailsPost);
     on<CreatePost>(_onCreatePost);
     on<UpdatePost>(_onUpdatePost);
     on<DeletePost>(_onDeletePost);
@@ -46,6 +48,45 @@ class PostBloc extends Bloc<PostEvent, PostState> {
           error: ApiError(message: "Something went wrong during fetching. Try later ...")));
     }
   }
+
+  Future<void> _onGetItemsByUser(GetItemsByUser event, Emitter<PostState> emit) async {
+    emit(state.copyWith(status: PostStatus.loadingGetItems));
+    try {
+      final firstPost = await postApiService.getFirstPostRecordsOfUser(event.user_id);
+      emit(state.copyWith(status:PostStatus.successGetItems, currentPost: firstPost, items: firstPost.items));
+    } on DioException catch (e) {
+      emit(state.copyWith(
+          status: PostStatus.error,
+          error: ApiError(
+              message: e.response?.data['message'] ??
+                  "Something went wrong during fetching. Try later ...")));
+    } on Exception {
+      emit(state.copyWith(
+          status: PostStatus.error,
+          error: ApiError(message: "Something went wrong during fetching. Try later ...")));
+    }
+  }
+
+Future<void> _onGetNextItemsByUser(GetNextItemsByUser event, Emitter<PostState> emit) async {
+    if (state.status != PostStatus.loadingGetItems) {
+      emit(state.copyWith(status: PostStatus.loadingGetItems));
+      try {
+        final nextPost = await postApiService.getNextPagePostRecordsOfUser(event.user_id, event.page);
+        final allItems = List<Item>.from(state.items)..addAll(nextPost.items);
+        emit(state.copyWith(status: PostStatus.successGetItems, currentPost: nextPost, items: allItems));
+      } on DioException catch (e) {
+        emit(state.copyWith(
+            status: PostStatus.error,
+            error: ApiError(
+                message: e.response?.data['message'] ?? "Something went wrong during fetch. Try later ...")));
+      } on Exception {
+        emit(state.copyWith(
+            status: PostStatus.error,
+            error: ApiError(message: "Something went wrong during fetch. Try later ...")));
+      }
+    }
+  }
+
 
   Future<void> onGetDetailsPost(GetDetailsPost event, Emitter<PostState> emit) async {
     emit(state.copyWith(status: PostStatus.loadingGetDetailsPost));

@@ -7,6 +7,8 @@ class PostApiService {
   final Dio _dio = Dio();
   final String basePostUrl =
       "https://xoc1-kd2t-7p9b.n7c.xano.io/api:xbcc5VEi/post";
+  final String basePostUrlForUser =
+      "https://xoc1-kd2t-7p9b.n7c.xano.io/api:xbcc5VEi/user";
 
   Future<Post> getFirstPostRecords() async {
     try {
@@ -27,6 +29,28 @@ class PostApiService {
       rethrow;
     }
   }
+
+  Future<Post> getFirstPostRecordsOfUser(int user_id) async {
+    try{
+      final response = await _dio.get(
+        "$basePostUrlForUser/$user_id/posts",
+      );
+      return Post.fromJson(response.data);
+    } on DioException{
+      rethrow;
+    }
+  }
+
+  Future<Post> getNextPagePostRecordsOfUser(int user_id, int page) async {
+    try {
+      final response = await _dio.get("$basePostUrlForUser/$user_id/posts?page=$page");
+      final post = response.data;
+      return Post.fromJson(post);
+    } on DioException {
+      rethrow;
+    }
+  }
+
 
   Future<ItemDetails> getPostDetails(int post_id) async {
     try {

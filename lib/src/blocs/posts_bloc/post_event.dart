@@ -5,10 +5,23 @@ abstract class PostEvent {}
 
 class GetItems extends PostEvent {}
 
+class GetItemsByUser extends PostEvent {
+  final int user_id;
+
+  GetItemsByUser(this.user_id);
+}
+
 class GetNextItems extends PostEvent {
   final int page;
 
   GetNextItems(this.page);
+}
+
+class GetNextItemsByUser extends PostEvent {
+  final int user_id;
+  final int page;
+
+  GetNextItemsByUser(this.user_id, this.page);
 }
 
 class GetDetailsPost extends PostEvent {

@@ -4,7 +4,7 @@ import 'package:wiki_tricky/src/blocs/posts_bloc/post_bloc.dart';
 import 'package:wiki_tricky/src/widgets/post_widget.dart';
 
 class CommunityPostListView extends StatefulWidget {
-  const CommunityPostListView({Key? key}) : super(key: key);
+  CommunityPostListView({Key? key}) : super(key: key);
 
   @override
   State<CommunityPostListView> createState() => _CommunityPostListViewState();
@@ -20,9 +20,14 @@ class _CommunityPostListViewState extends State<CommunityPostListView> {
     _loadInitialPosts();
   }
 
+  void reloadPosts() {
+    BlocProvider.of<PostBloc>(context, listen: false).add(GetItems());
+  }
+
   void _loadInitialPosts() {
     BlocProvider.of<PostBloc>(context, listen: false).add(GetItems());
   }
+
 
   @override
   void dispose() {
