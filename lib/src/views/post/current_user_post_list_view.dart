@@ -37,6 +37,8 @@ class CurrentUserPostListViewState extends State<CurrentUserPostListView> {
 
   @override
   Widget build(BuildContext context) {
+    final postBloc = BlocProvider.of<PostBloc>(context);
+
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, authState) {
         if (authState.status == AuthStatus.success) {
@@ -53,7 +55,7 @@ class CurrentUserPostListViewState extends State<CurrentUserPostListView> {
                   SliverToBoxAdapter(
                     child: UserProfileHeader(
                       user: authState.user!,
-                      totalPosts: 0, // Ceci devrait être mis à jour en fonction de l'état du PostBloc
+                      totalPosts: postBloc.state.currentPost!.itemsTotal, //Change Later
                     ),
                   ),
                   BlocBuilder<PostBloc, PostState>(

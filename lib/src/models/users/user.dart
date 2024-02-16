@@ -2,13 +2,13 @@ class User {
   final int id;
   final int created_at;
   String name;
-  String email;
+  String? email;
 
   User({
     required this.id,
     required this.created_at,
     required this.name,
-    required this.email,
+    this.email,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {

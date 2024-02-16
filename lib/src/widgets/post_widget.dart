@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:toastification/toastification.dart';
 import 'package:wiki_tricky/src/views/post/post_detail_view.dart';
+import 'package:wiki_tricky/src/views/post/random_user_post_list_view.dart';
 import 'package:wiki_tricky/src/widgets/use_cases_dialog/delete_post_dialog.dart';
 import 'package:wiki_tricky/src/widgets/use_cases_dialog/update_post_dialog.dart';
 
@@ -59,11 +60,19 @@ class PostWidget extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        item.author.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                      TextButton(
+                        style : TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        onPressed: () => _onShowAllUserPostPressed(context, item.author.id, item.author.name, item.createdAt),
+                        child: Text(
+                          item.author.name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                       Row(
@@ -232,6 +241,11 @@ class PostWidget extends StatelessWidget {
   _onShowPostDetailsPressed(BuildContext context, int post_id) {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => PostDetailView(id: post_id)));
+  }
+
+  _onShowAllUserPostPressed(BuildContext context, int user_id, String name, int created_at) {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => RandomUserPostListView(user_id: user_id, name: name, created_at: created_at)));
   }
 
   _showUpdatePostDialog(BuildContext context, String authToken) {

@@ -1,18 +1,18 @@
 class Author {
   final int id;
-  final int createdAt;
+  final int created_at;
   final String name;
 
   Author({
     required this.id,
-    required this.createdAt,
+    required this.created_at,
     required this.name,
   });
 
   factory Author.fromJson(Map<String, dynamic> json) {
     return Author(
       id: json['id'],
-      createdAt: json['created_at'],
+      created_at: json['created_at'],
       name: json['name'],
     );
   }
@@ -20,7 +20,7 @@ class Author {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'created_at': createdAt,
+      'created_at': created_at,
       'name': name,
     };
   }
