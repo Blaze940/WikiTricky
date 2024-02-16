@@ -57,7 +57,7 @@ class UpdateCommentDialogState extends State<UpdateCommentDialog> {
                   TextFormField(
                     controller: _contentController,
                     decoration: InputDecoration(
-                      labelText: 'Content',
+                      labelText: 'Comment',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {

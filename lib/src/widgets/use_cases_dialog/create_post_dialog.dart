@@ -131,7 +131,7 @@ class CreatePostDialogState extends State<CreatePostDialog> {
       showCustomToast(context,
           type: ToastificationType.error,
           title: "Error",
-          description: state.error?.toString() ?? "Error creating post");
+          description: state.error?.toString() ?? "Error while creating post");
       setState(() => _isPosting = false);
     }
   }

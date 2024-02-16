@@ -6,6 +6,8 @@ import 'package:wiki_tricky/src/blocs/posts_bloc/post_bloc.dart';
 import 'package:wiki_tricky/src/widgets/custom_app_bar_simple.dart';
 import 'package:wiki_tricky/src/widgets/comment_widget.dart';
 
+import '../../widgets/create_comment_widget.dart';
+
 class PostDetailView extends StatefulWidget {
   final int id;
 
@@ -80,14 +82,7 @@ class _PostDetailViewState extends State<PostDetailView> {
           return const SizedBox();
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        mini: true,
-        onPressed: () {
-          // Logic to add a new comment
-        },
-        backgroundColor: const Color(0xFF8B0000),
-        child: const Icon(Icons.add_comment, color: Colors.white, size: 24),
-      ),
+      floatingActionButton: CreateCommentWidget(post_id: widget.id),
     );
   }
 }
